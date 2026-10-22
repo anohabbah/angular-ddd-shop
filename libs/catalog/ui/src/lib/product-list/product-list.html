@@ -1,0 +1,29 @@
+<input
+  #search
+  type="search"
+  placeholder="Search products"
+  aria-label="Search products"
+  [value]="store.searchTerm()"
+  (input)="store.setSearchTerm(search.value)"
+/>
+
+@if (store.products.isLoading()) {
+<output>Loading products…</output>
+} @else if (store.products.error()) {
+<p role="alert">Products could not be loaded.</p>
+<button type="button" (click)="store.reload()">Try again</button>
+} @else if (store.hasNoMatches()) {
+<p>No products match "{{ store.settledSearchTerm() }}"</p>
+} @else if (store.products.hasValue()) {
+<ul>
+  @for (product of store.products.value(); track product.id) {
+  <li>
+    <a [routerLink]="[product.id]">
+      <app-product-thumbnail [product]="product" [size]="96" />
+      <h2>{{ product.title }}</h2>
+      <app-price-tag [product]="product" />
+    </a>
+  </li>
+  }
+</ul>
+}

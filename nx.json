@@ -3,7 +3,11 @@
   "analytics": false,
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": ["default"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json"
+    ],
     "sharedGlobals": []
   },
   "targetDefaults": {
@@ -19,7 +23,7 @@
   },
   "plugins": [
     {
-      "plugin": "@nx/oxlint",
+      "plugin": "@nx/eslint/plugin",
       "options": {
         "targetName": "lint"
       }
@@ -29,14 +33,28 @@
       "options": {
         "targetName": "e2e"
       }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test",
+        "ciTargetName": "test-ci",
+        "testMode": "watch"
+      }
     }
   ],
   "generators": {
     "@nx/angular:application": {
       "e2eTestRunner": "playwright",
-      "linter": "oxlint",
+      "linter": "eslint",
       "style": "scss",
       "unitTestRunner": "vitest-angular"
+    },
+    "@nx/angular:library": {
+      "unitTestRunner": "vitest-analog"
+    },
+    "@nx/angular:component": {
+      "style": "css"
     }
   },
   "defaultProject": "ngsample"

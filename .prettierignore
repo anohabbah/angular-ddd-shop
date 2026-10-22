@@ -1,0 +1,8 @@
+/dist
+/coverage
+/.nx
+/.angular
+pnpm-lock.yaml
+/.claude
+
+.angular

@@ -1,0 +1,36 @@
+schema: spec-driven
+
+context: |
+  Code rules (DDD architecture, declarative signals, Angular conventions, TDD,
+  exemptions) live in the project CLAUDE.md and are the source of truth.
+  The rules below say how each artifact must apply them.
+
+rules:
+  proposal:
+    - Name the bounded context(s) the change touches, any new Nx libs it needs, and any new domain terms for GLOSSARY.md
+    - State the minimal source (writable) state the change introduces; everything else must be derived
+  specs:
+    - Use the ubiquitous language from GLOSSARY.md
+    - Express requirements as relationships between state ("total is the sum of item prices"), not as update steps ("when an item is added, update the total")
+  design:
+    - Place every new piece in its Nx lib (libs/<context>/<layer>) with its scope/type tags, and show that every dependency is allowed by CLAUDE.md
+    - Define domain ports for external systems; infrastructure adapters implement them
+    - Define domain types as zod/mini schemas, and name the boundary where each untrusted input (HTTP, storage, URL, form) is parsed
+    - List every writable signal and justify why it cannot be derived; name the primitive (computed, linkedSignal, resource, httpResource) for each derived value
+    - Any effect() names the external API it syncs to
+    - Name the angular-developer skill references consulted (e.g. signals-overview, linked-signal, resource, http-client, signal-forms, define-routes) and the choices they drove
+  tasks:
+    - The first task proposes the test seams (public interfaces under test, one line each on what it catches and misses) and waits for user confirmation; no test task may target an unconfirmed seam
+    - Every implementation task is one vertical slice written as "Red - <behavior> at <seam>" followed by "Green - minimal code to pass"; never group tests ahead of the code they cover
+    - Order slices inward-out - domain functions first, then application stores, then ui
+    - Expected values in tests come from the spec or worked examples, never recomputed the way the code does
+    - Refactoring is a separate final review task, not part of a slice
+    - TDD-exempt tasks (config, generated code, docs) are marked "(exempt)"; generating a new Nx lib is an exempt task that comes before its first slice
+    - Boundary parsing gets its own slice - Red with invalid input rejected at the adapter or form
+    - End with a task to run pnpm nx build and pnpm nx test
+
+operations:
+  apply:
+    guidance:
+      - Invoke the tdd skill before the first slice and the angular-developer skill before writing Angular code
+      - Before finishing, check changed production code for effect() bodies calling .set()/.update(), subscribe-and-assign, state derived in ngOnInit/ngOnChanges, imports from 'zod' instead of 'zod/mini', relative imports across libs, and dependencies not allowed by the CLAUDE.md tag rules

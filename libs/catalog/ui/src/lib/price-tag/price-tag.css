@@ -1,0 +1,9 @@
+:host {
+  display: inline-flex;
+  gap: 0.5em;
+  align-items: baseline;
+}
+
+.list {
+  opacity: 0.6;
+}

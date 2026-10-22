@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "preserve",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": true,
+    "paths": {
+      "@ngsample/shared-domain": ["./libs/shared/domain/src/index.ts"],
+      "@ngsample/catalog-domain": ["./libs/catalog/domain/src/index.ts"],
+      "@ngsample/catalog-infrastructure": ["./libs/catalog/infrastructure/src/index.ts"],
+      "@ngsample/catalog-application": ["./libs/catalog/application/src/index.ts"],
+      "@ngsample/catalog-ui": ["./libs/catalog/ui/src/index.ts"],
+      "@ngsample/catalog-testing": ["./libs/catalog/testing/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

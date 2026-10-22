@@ -1,0 +1,17 @@
+<a routerLink="..">Back to catalog</a>
+
+@if (detail.notFound()) {
+<p role="alert">Product not found</p>
+} @else if (detail.product.isLoading()) {
+<output>Loading product…</output>
+} @else if (detail.product.error()) {
+<p role="alert">Product could not be loaded. Please try again later.</p>
+} @else if (detail.product.hasValue()) { @let product = detail.product.value();
+<article>
+  <app-product-thumbnail [product]="product" [size]="300" />
+  <h1>{{ product.title }}</h1>
+  <p class="category">{{ product.category }}</p>
+  <app-price-tag [product]="product" />
+  <p>{{ product.description }}</p>
+</article>
+}

@@ -1,0 +1,10 @@
+{
+  "name": "catalog-application",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/catalog/application/src",
+  "prefix": "app",
+  "tags": ["scope:catalog", "type:application"],
+  "projectType": "library",
+  "// targets": "to see all targets run: nx show project catalog-application --web",
+  "targets": {}
+}
