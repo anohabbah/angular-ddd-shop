@@ -24,6 +24,7 @@ The rules below apply to production code. Exempt: one-off scripts, config, docs,
   - `type:domain → domain`
   - `type:testing → domain`; any layer's spec files may also import `type:testing`
   - `scope:<context> → same scope, scope:shared`
+  - Recorded exception: `scope:catalog → scope:cart`, one-way ([ADR 0001](docs/adr/0001-catalog-may-depend-on-cart.md)). Any other cross-context edge needs its own ADR.
 - `pnpm nx lint` enforces these (`@nx/enforce-module-boundaries` in `eslint.config.mjs`). A new bounded context needs its own `scope:<context>` constraint there.
 - Import a lib only through its path alias (its `index.ts` public API), never by relative path into another lib.
 - Name things in the ubiquitous language from `GLOSSARY.md`. Add new terms there (`domain-modeling` skill).

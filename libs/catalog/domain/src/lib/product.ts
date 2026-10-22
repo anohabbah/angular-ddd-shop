@@ -1,8 +1,5 @@
-import { Money } from '@ngsample/shared-domain';
+import { Money, ProductId } from '@ngsample/shared-domain';
 import * as z from 'zod/mini';
-
-export const ProductId = z.int().check(z.positive());
-export type ProductId = z.infer<typeof ProductId>;
 
 /** Percentage taken off the list price. */
 export const Discount = z.number().check(z.gte(0), z.lte(100));

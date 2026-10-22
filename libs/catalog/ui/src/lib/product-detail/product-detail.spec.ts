@@ -2,6 +2,7 @@ import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { CartStore } from '@ngsample/cart-application';
 import { ProductSource } from '@ngsample/catalog-domain';
 import { catalogRoutes } from '../catalog.routes';
 import { FakeProductSource, product } from '@ngsample/catalog-testing';
@@ -82,5 +83,27 @@ describe('ProductDetail', () => {
       a.textContent?.includes('Back to catalog'),
     );
     expect(back?.getAttribute('href')).toBe('/');
+  });
+
+  it('adds the product to the Cart, once per click, at its final price', async () => {
+    const element = await open('/1');
+    const addToCart = [...element.querySelectorAll('button')].find((b) =>
+      b.textContent?.includes('Add to cart'),
+    );
+
+    addToCart?.click();
+    addToCart?.click();
+
+    expect(TestBed.inject(CartStore).lines()).toEqual([
+      {
+        item: {
+          productId: 1,
+          title: 'Essence Mascara Lash Princess',
+          thumbnail: '',
+          unitPrice: { amountMinor: 894, currency: 'USD' },
+        },
+        quantity: 2,
+      },
+    ]);
   });
 });

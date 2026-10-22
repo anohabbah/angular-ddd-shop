@@ -1,0 +1,36 @@
+<h1>Cart</h1>
+
+@if (total(); as total) {
+<ul>
+  @for (row of rows(); track row.line.item.productId) {
+  <li>
+    <img [ngSrc]="row.line.item.thumbnail" [alt]="row.line.item.title" width="80" height="80" />
+    <a [routerLink]="['/catalog', row.line.item.productId]">{{ row.line.item.title }}</a>
+    <span>{{ row.unitPrice }}</span>
+    <button
+      type="button"
+      aria-label="Decrease quantity"
+      [disabled]="row.line.quantity === 1"
+      (click)="cart.decrease(row.line.item.productId)"
+    >
+      -
+    </button>
+    <span aria-label="Quantity">{{ row.line.quantity }}</span>
+    <button
+      type="button"
+      aria-label="Increase quantity"
+      (click)="cart.increase(row.line.item.productId)"
+    >
+      +
+    </button>
+    <span>{{ row.lineTotal }}</span>
+    <button type="button" aria-label="Remove" (click)="cart.remove(row.line.item.productId)">
+      Remove
+    </button>
+  </li>
+  }
+</ul>
+<p>Cart total: {{ total }}</p>
+} @else {
+<p>Your cart is empty</p>
+}

@@ -1,5 +1,6 @@
 import { computed, inject, resource, type Resource, type Signal } from '@angular/core';
-import { type Product, type ProductId, ProductSource } from '@ngsample/catalog-domain';
+import { type Product, ProductSource } from '@ngsample/catalog-domain';
+import type { ProductId } from '@ngsample/shared-domain';
 
 export interface ProductDetail {
   product: Resource<Product | undefined>;

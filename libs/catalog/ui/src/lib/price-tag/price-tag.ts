@@ -1,12 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { priceDisplay, type Product } from '@ngsample/catalog-domain';
-import type { Money } from '@ngsample/shared-domain';
-
-function formatMoney(money: Money): string {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: money.currency }).format(
-    money.amountMinor / 100,
-  );
-}
+import { formatMoney } from '@ngsample/shared-domain';
 
 @Component({
   selector: 'app-price-tag',

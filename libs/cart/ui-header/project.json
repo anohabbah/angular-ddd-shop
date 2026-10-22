@@ -1,0 +1,10 @@
+{
+  "name": "cart-ui-header",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/cart/ui-header/src",
+  "prefix": "app",
+  "tags": ["scope:cart", "type:ui"],
+  "projectType": "library",
+  "// targets": "to see all targets run: nx show project cart-ui-header --web",
+  "targets": {}
+}

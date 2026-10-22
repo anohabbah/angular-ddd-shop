@@ -12,6 +12,7 @@
   <h1>{{ product.title }}</h1>
   <p class="category">{{ product.category }}</p>
   <app-price-tag [product]="product" />
+  <button type="button" (click)="addToCart(product)">Add to cart</button>
   <p>{{ product.description }}</p>
 </article>
 }

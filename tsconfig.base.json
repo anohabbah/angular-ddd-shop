@@ -20,7 +20,11 @@
       "@ngsample/catalog-infrastructure": ["./libs/catalog/infrastructure/src/index.ts"],
       "@ngsample/catalog-application": ["./libs/catalog/application/src/index.ts"],
       "@ngsample/catalog-ui": ["./libs/catalog/ui/src/index.ts"],
-      "@ngsample/catalog-testing": ["./libs/catalog/testing/src/index.ts"]
+      "@ngsample/catalog-testing": ["./libs/catalog/testing/src/index.ts"],
+      "@ngsample/cart-domain": ["./libs/cart/domain/src/index.ts"],
+      "@ngsample/cart-application": ["./libs/cart/application/src/index.ts"],
+      "@ngsample/cart-ui": ["./libs/cart/ui/src/index.ts"],
+      "@ngsample/cart-ui-header": ["./libs/cart/ui-header/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

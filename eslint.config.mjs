@@ -51,9 +51,14 @@ export default [
               bannedExternalImports: ['@angular/*', 'rxjs', 'rxjs/*'],
             },
             { sourceTag: 'scope:shared', onlyDependOnLibsWithTags: ['scope:shared'] },
+            // Catalog -> Cart is a recorded one-way exception (docs/adr/0001-catalog-may-depend-on-cart.md).
             {
               sourceTag: 'scope:catalog',
-              onlyDependOnLibsWithTags: ['scope:catalog', 'scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:catalog', 'scope:shared', 'scope:cart'],
+            },
+            {
+              sourceTag: 'scope:cart',
+              onlyDependOnLibsWithTags: ['scope:cart', 'scope:shared'],
             },
           ],
         },

@@ -1,4 +1,5 @@
-import type { Product, ProductId } from './product';
+import type { ProductId } from '@ngsample/shared-domain';
+import type { Product } from './product';
 
 /**
  * Port to the external system the Catalog reads its products from. An abstract class so it can be

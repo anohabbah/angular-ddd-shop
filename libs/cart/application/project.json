@@ -1,0 +1,10 @@
+{
+  "name": "cart-application",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/cart/application/src",
+  "prefix": "app",
+  "tags": ["scope:cart", "type:application"],
+  "projectType": "library",
+  "// targets": "to see all targets run: nx show project cart-application --web",
+  "targets": {}
+}
