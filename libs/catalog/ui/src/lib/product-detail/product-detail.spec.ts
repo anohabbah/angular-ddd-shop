@@ -4,8 +4,8 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { CartStore } from '@ngsample/cart-application';
 import { ProductSource } from '@ngsample/catalog-domain';
-import { catalogRoutes } from '../catalog.routes';
 import { FakeProductSource, product } from '@ngsample/catalog-testing';
+import { catalogRoutes } from '../catalog.routes';
 
 const mascara = {
   ...product(1, 'Essence Mascara Lash Princess'),

@@ -1,2 +1,49 @@
-<header><app-cart-link /></header>
-<router-outlet />
+<mat-sidenav-container class="h-full">
+  <mat-sidenav
+    [mode]="mode()"
+    [disableClose]="wide()"
+    [opened]="opened()"
+    (closedStart)="opened.set(false)"
+  >
+    <nav>
+      <mat-nav-list>
+        @for (item of navItems; track item.path) {
+        <a
+          mat-list-item
+          class="pressable"
+          [routerLink]="item.path"
+          routerLinkActive
+          #link="routerLinkActive"
+          [activated]="link.isActive"
+          ariaCurrentWhenActive="page"
+          >{{ item.label }}</a
+        >
+        }
+      </mat-nav-list>
+    </nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <header class="sticky top-0 z-10">
+      <mat-toolbar class="gap-2">
+        @if (!wide()) {
+        <button
+          mat-icon-button
+          class="pressable"
+          aria-label="Open navigation"
+          [attr.aria-expanded]="opened()"
+          (click)="opened.set(true)"
+        >
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        }
+        <span class="flex-1">ngsample</span>
+        <app-cart-link />
+      </mat-toolbar>
+    </header>
+    <main class="mx-auto max-w-5xl p-4">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

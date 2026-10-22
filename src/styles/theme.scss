@@ -1,0 +1,49 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  color-scheme: light dark;
+  @include mat.theme(
+    (
+      color: mat.$azure-palette,
+      typography: system-ui,
+      density: 0,
+    )
+  );
+  @include mat.sidenav-overrides(
+    (
+      container-width: 16rem,
+    )
+  );
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+}
+
+// Material hard-codes the drawer transition (400ms, standard curve) with no token.
+// The extra class outranks it, since Material's styles load after this sheet.
+.mat-drawer-container.mat-drawer-transition {
+  .mat-drawer {
+    transition: transform 300ms var(--ease-drawer);
+  }
+
+  .mat-drawer:not(.mat-drawer-opened) {
+    transition-duration: 200ms;
+  }
+
+  .mat-drawer-backdrop {
+    transition-duration: 200ms;
+    transition-timing-function: var(--ease-out-strong);
+  }
+
+  // Only side and over modes are used: the content moves only when the mode switches on
+  // resize, and layout changes should snap rather than animate margins.
+  .mat-drawer-content {
+    transition: none;
+  }
+}

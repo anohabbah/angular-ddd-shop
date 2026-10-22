@@ -1,0 +1,40 @@
+/* No preflight: Material sets the base, and the catalog and cart screens rely on browser defaults. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Colors alias Material system tokens, so utilities follow the Material theme and color scheme. */
+@theme inline {
+  --color-primary: var(--mat-sys-primary);
+  --color-on-primary: var(--mat-sys-on-primary);
+  --color-surface: var(--mat-sys-surface);
+  --color-on-surface: var(--mat-sys-on-surface);
+  --color-on-surface-variant: var(--mat-sys-on-surface-variant);
+  --color-surface-container: var(--mat-sys-surface-container);
+  --color-outline-variant: var(--mat-sys-outline-variant);
+  --font-sans: system-ui, sans-serif;
+}
+
+/* Static: theme.scss uses these outside of utilities, so they are always emitted. */
+@theme static {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Press feedback in place of Material's ripple. */
+@utility pressable {
+  transition: scale 160ms var(--ease-out-strong);
+
+  &:active {
+    scale: 0.97;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:active {
+      scale: none;
+    }
+  }
+}

@@ -15,7 +15,7 @@ The rules below apply to production code. Exempt: one-off scripts, config, docs,
   - `libs/<context>/ui` (`@nx/angular:library`): components and lazy-loaded routes.
   - `libs/<context>/testing` (`@nx/js:library`, tag `type:testing`): test doubles for the context's ports, imported by spec files only.
 - Shared kernel: `libs/shared/<layer>`, tagged `scope:shared`.
-- The app (`src/`, tag `type:app`) only composes: lazy-loads context `ui` routes and registers `infrastructure` providers in `app.config.ts`.
+- The app (`src/`, tag `type:app`) only composes: lazy-loads context `ui` routes and registers `infrastructure` providers in `app.config.ts`. Exception: it owns the app shell (`App`: navigation layout and its UI state), since the shell belongs to no bounded context.
 - Allowed dependencies:
   - `type:app → ui, infrastructure`
   - `type:ui → application, domain`
@@ -49,7 +49,7 @@ Declare what state _is_; never write code that keeps state in sync.
 - `.set()` / `.update()` only in commands triggered by events (store methods, event handlers).
 - `effect()` / `afterRenderEffect()` only sync outward to non-signal APIs (storage, canvas, third-party libs, analytics) and never write to signals.
 - No subscribe-and-assign, no deriving state in `ngOnInit` / `ngOnChanges`.
-- RxJS only for time-based streams (debounce, websockets), bridged with `toSignal()` / `toObservable()`. Exception: inside an adapter, to turn an `HttpClient` call into a Promise that cancels on an `AbortSignal`.
+- RxJS only for time-based or external event streams (debounce, websockets, media queries via CDK `BreakpointObserver`), bridged with `toSignal()` / `toObservable()`. Exception: inside an adapter, to turn an `HttpClient` call into a Promise that cancels on an `AbortSignal`.
 
 ## Angular conventions
 
