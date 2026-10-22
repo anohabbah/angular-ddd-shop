@@ -57,5 +57,8 @@
       "style": "css"
     }
   },
-  "defaultProject": "ngsample"
+  "defaultProject": "ngsample",
+  "affected": {
+    "legacy": true
+  }
 }
