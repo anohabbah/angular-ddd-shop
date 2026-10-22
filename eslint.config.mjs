@@ -75,7 +75,7 @@ export default [
         {
           paths: [zodPath],
           patterns: [
-            { group: ['@ngsample/*-testing'], message: 'Test doubles are for spec files only.' },
+            { group: ['@ngsample/*/testing'], message: 'Test doubles are for spec files only.' },
           ],
         },
       ],

@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, resource, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { normalizeSearchTerm, ProductSource } from '@ngsample/catalog-domain';
+import { normalizeSearchTerm, ProductSource } from '@ngsample/catalog/domain';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 const SETTLE_TIME_MS = 300;

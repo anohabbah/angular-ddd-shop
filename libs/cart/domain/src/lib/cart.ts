@@ -1,4 +1,4 @@
-import { Money, ProductId } from '@ngsample/shared-domain';
+import { Money, ProductId } from '@ngsample/shared/domain';
 import * as z from 'zod/mini';
 
 export const Quantity = z.int().check(z.gte(1));

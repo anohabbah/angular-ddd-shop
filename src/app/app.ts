@@ -6,7 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { CartLink } from '@ngsample/cart-ui-header';
+import { CartLink } from '@ngsample/cart/ui/header';
 import { map } from 'rxjs';
 
 export const WIDE_VIEWPORT_QUERY = '(min-width: 960px)';

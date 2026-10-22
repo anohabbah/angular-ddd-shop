@@ -2,9 +2,9 @@ import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { CatalogStore } from '@ngsample/catalog-application';
-import { ProductSource } from '@ngsample/catalog-domain';
-import { FakeProductSource, product } from '@ngsample/catalog-testing';
+import { CatalogStore } from '@ngsample/catalog/application';
+import { ProductSource } from '@ngsample/catalog/domain';
+import { FakeProductSource, product } from '@ngsample/catalog/testing';
 import { ProductList } from './product-list';
 
 const mascara = { ...product(1, 'Essence Mascara Lash Princess'), thumbnail: 'mascara.webp' };

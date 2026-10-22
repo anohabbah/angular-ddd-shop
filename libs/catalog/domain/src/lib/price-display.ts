@@ -1,4 +1,4 @@
-import type { Money } from '@ngsample/shared-domain';
+import type { Money } from '@ngsample/shared/domain';
 import { finalPrice } from './final-price';
 import type { Product } from './product';
 

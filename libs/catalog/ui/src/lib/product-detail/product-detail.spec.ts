@@ -2,9 +2,9 @@ import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { CartStore } from '@ngsample/cart-application';
-import { ProductSource } from '@ngsample/catalog-domain';
-import { FakeProductSource, product } from '@ngsample/catalog-testing';
+import { CartStore } from '@ngsample/cart/application';
+import { ProductSource } from '@ngsample/catalog/domain';
+import { FakeProductSource, product } from '@ngsample/catalog/testing';
 import { catalogRoutes } from '../catalog.routes';
 
 const mascara = {

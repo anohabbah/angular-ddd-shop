@@ -1,4 +1,4 @@
-import type { Money } from '@ngsample/shared-domain';
+import type { Money } from '@ngsample/shared/domain';
 import type { Discount } from './product';
 
 export function applyDiscount(money: Money, discount: Discount): Money {

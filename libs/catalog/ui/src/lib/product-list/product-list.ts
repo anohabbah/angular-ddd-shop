@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CatalogStore } from '@ngsample/catalog-application';
+import { CatalogStore } from '@ngsample/catalog/application';
 import { PriceTag } from '../price-tag/price-tag';
 import { ProductThumbnail } from '../product-thumbnail/product-thumbnail';
 

@@ -4,7 +4,7 @@ import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { provideCatalogInfrastructure } from '@ngsample/catalog-infrastructure';
+import { provideCatalogInfrastructure } from '@ngsample/catalog/infrastructure';
 import { appRoutes } from './app.routes';
 
 describe('appRoutes', () => {

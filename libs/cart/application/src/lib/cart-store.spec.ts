@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import type { CartItem } from '@ngsample/cart-domain';
+import type { CartItem } from '@ngsample/cart/domain';
 import { CartStore } from './cart-store';
 
 const mascara: CartItem = {

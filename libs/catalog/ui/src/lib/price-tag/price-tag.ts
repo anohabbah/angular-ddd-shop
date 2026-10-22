@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
-import { priceDisplay, type Product } from '@ngsample/catalog-domain';
-import { formatMoney } from '@ngsample/shared-domain';
+import { priceDisplay, type Product } from '@ngsample/catalog/domain';
+import { formatMoney } from '@ngsample/shared/domain';
 
 @Component({
   selector: 'app-price-tag',

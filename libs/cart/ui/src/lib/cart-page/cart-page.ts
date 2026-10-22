@@ -1,9 +1,9 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CartStore } from '@ngsample/cart-application';
-import { lineTotal } from '@ngsample/cart-domain';
-import { formatMoney } from '@ngsample/shared-domain';
+import { CartStore } from '@ngsample/cart/application';
+import { lineTotal } from '@ngsample/cart/domain';
+import { formatMoney } from '@ngsample/shared/domain';
 
 @Component({
   selector: 'app-cart-page',

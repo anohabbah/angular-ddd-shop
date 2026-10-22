@@ -2,8 +2,8 @@ import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { CartStore } from '@ngsample/cart-application';
-import type { CartItem } from '@ngsample/cart-domain';
+import { CartStore } from '@ngsample/cart/application';
+import type { CartItem } from '@ngsample/cart/domain';
 import { cartRoutes } from '../cart.routes';
 
 const mascara: CartItem = {

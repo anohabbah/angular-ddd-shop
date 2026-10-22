@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import type { Product } from '@ngsample/catalog-domain';
+import type { Product } from '@ngsample/catalog/domain';
 import { PriceTag } from './price-tag';
 
 const product = (listPriceMinor: number, discount: number): Product => ({

@@ -1,4 +1,4 @@
-import type { ProductId } from '@ngsample/shared-domain';
+import type { ProductId } from '@ngsample/shared/domain';
 import type { Product } from './product';
 
 /**

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { CartStore } from '@ngsample/cart-application';
-import type { CartItem } from '@ngsample/cart-domain';
+import { CartStore } from '@ngsample/cart/application';
+import type { CartItem } from '@ngsample/cart/domain';
 import { CartLink } from './cart-link';
 
 const item = (productId: number): CartItem => ({

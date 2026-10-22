@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Product, ProductSource } from '@ngsample/catalog-domain';
-import type { ProductId } from '@ngsample/shared-domain';
+import { Product, ProductSource } from '@ngsample/catalog/domain';
+import type { ProductId } from '@ngsample/shared/domain';
 import { firstValueFrom, fromEvent, type Observable, takeUntil } from 'rxjs';
 import * as z from 'zod/mini';
 

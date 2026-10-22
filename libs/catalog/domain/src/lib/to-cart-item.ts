@@ -1,4 +1,4 @@
-import type { CartItem } from '@ngsample/cart-domain';
+import type { CartItem } from '@ngsample/cart/domain';
 import { finalPrice } from './final-price';
 import type { Product } from './product';
 

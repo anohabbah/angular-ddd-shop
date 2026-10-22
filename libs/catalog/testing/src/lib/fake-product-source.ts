@@ -1,5 +1,5 @@
-import { type Product, ProductSource } from '@ngsample/catalog-domain';
-import type { ProductId } from '@ngsample/shared-domain';
+import { type Product, ProductSource } from '@ngsample/catalog/domain';
+import type { ProductId } from '@ngsample/shared/domain';
 
 /** Test double for the product source port. */
 export class FakeProductSource extends ProductSource {

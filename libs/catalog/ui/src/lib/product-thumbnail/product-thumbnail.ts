@@ -1,6 +1,6 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input, linkedSignal } from '@angular/core';
-import type { Product } from '@ngsample/catalog-domain';
+import type { Product } from '@ngsample/catalog/domain';
 
 @Component({
   selector: 'app-product-thumbnail',

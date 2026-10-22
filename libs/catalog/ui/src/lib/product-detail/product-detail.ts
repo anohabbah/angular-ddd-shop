@@ -1,9 +1,9 @@
 import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CartStore } from '@ngsample/cart-application';
-import { productDetail } from '@ngsample/catalog-application';
-import { parseProductId, type Product, toCartItem } from '@ngsample/catalog-domain';
-import type { ProductId } from '@ngsample/shared-domain';
+import { CartStore } from '@ngsample/cart/application';
+import { productDetail } from '@ngsample/catalog/application';
+import { parseProductId, type Product, toCartItem } from '@ngsample/catalog/domain';
+import type { ProductId } from '@ngsample/shared/domain';
 import { PriceTag } from '../price-tag/price-tag';
 import { ProductThumbnail } from '../product-thumbnail/product-thumbnail';
 

@@ -1,4 +1,4 @@
-import { Money, ProductId } from '@ngsample/shared-domain';
+import { Money, ProductId } from '@ngsample/shared/domain';
 import * as z from 'zod/mini';
 
 /** Percentage taken off the list price. */

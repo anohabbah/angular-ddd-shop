@@ -1,7 +1,7 @@
 import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ProductSource } from '@ngsample/catalog-domain';
-import { FakeProductSource, product } from '@ngsample/catalog-testing';
+import { ProductSource } from '@ngsample/catalog/domain';
+import { FakeProductSource, product } from '@ngsample/catalog/testing';
 import { CatalogStore } from './catalog-store';
 
 const mascara = product(1, 'Essence Mascara Lash Princess');

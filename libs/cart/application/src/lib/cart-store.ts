@@ -8,8 +8,8 @@ import {
   increaseQuantity,
   itemCount,
   removeLine,
-} from '@ngsample/cart-domain';
-import type { ProductId } from '@ngsample/shared-domain';
+} from '@ngsample/cart/domain';
+import type { ProductId } from '@ngsample/shared/domain';
 
 /** One Cart for the whole session, shared by the header, the catalog and the cart page. */
 @Injectable({ providedIn: 'root' })

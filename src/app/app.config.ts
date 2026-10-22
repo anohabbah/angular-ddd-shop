@@ -2,7 +2,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from '@angular/material/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideCatalogInfrastructure } from '@ngsample/catalog-infrastructure';
+import { provideCatalogInfrastructure } from '@ngsample/catalog/infrastructure';
 import { appRoutes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {

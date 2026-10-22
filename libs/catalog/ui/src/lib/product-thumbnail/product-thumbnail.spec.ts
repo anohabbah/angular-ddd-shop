@@ -1,6 +1,6 @@
 import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import type { Product } from '@ngsample/catalog-domain';
+import type { Product } from '@ngsample/catalog/domain';
 import { ProductThumbnail } from './product-thumbnail';
 
 const product = (thumbnail: string): Product => ({
