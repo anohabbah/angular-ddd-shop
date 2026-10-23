@@ -63,4 +63,8 @@ Follow the `angular-developer` skill and read its relevant references before wri
 
 ## Testing
 
-TDD per the `tdd` skill: agree on seams before the first test, then one red → green vertical slice at a time. Refactoring happens at review, not inside the loop. Preferred seams, in order: domain functions (plain Vitest, no TestBed), application stores, components (through the DOM or harnesses).
+TDD per the `tdd` skill: agree on seams before the first test, then one red → green vertical slice at a time. Refactoring happens at review, not inside the loop.
+
+- Unit seams (Vitest), in order: domain functions (plain Vitest, no TestBed), application stores, infrastructure adapters (`HttpTestingController`).
+- UI behavior is tested end-to-end with Playwright in `e2e/`, against the product source stubbed in `e2e/src/support/fixtures.ts`. Locate elements by role, label or text only; no CSS selectors or test ids.
+- No component specs. Run `pnpm nx e2e e2e` with `pnpm nx build` and `pnpm nx test`.

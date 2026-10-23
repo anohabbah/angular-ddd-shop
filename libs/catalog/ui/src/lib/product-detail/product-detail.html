@@ -1,18 +1,29 @@
-<a routerLink="..">Back to catalog</a>
+<a mat-button routerLink=".." class="pressable">
+  <mat-icon>arrow_back</mat-icon>
+  Back to catalog
+</a>
 
 @if (detail.notFound()) {
 <p role="alert">Product not found</p>
 } @else if (detail.product.isLoading()) {
-<output>Loading product…</output>
+<mat-progress-bar mode="indeterminate" aria-label="Loading product" />
 } @else if (detail.product.error()) {
 <p role="alert">Product could not be loaded. Please try again later.</p>
 } @else if (detail.product.hasValue()) { @let product = detail.product.value();
-<article>
+<article class="grid max-w-160 gap-2">
   <app-product-thumbnail [product]="product" [size]="300" />
-  <h1>{{ product.title }}</h1>
-  <p class="category">{{ product.category }}</p>
+  <h1 class="m-0 text-title-large">{{ product.title }}</h1>
+  <p class="m-0 text-on-surface-variant capitalize">{{ product.category }}</p>
   <app-price-tag [product]="product" />
-  <button type="button" (click)="addToCart(product)">Add to cart</button>
+  <button
+    mat-flat-button
+    type="button"
+    class="pressable justify-self-start"
+    (click)="addToCart(product)"
+  >
+    <mat-icon>add_shopping_cart</mat-icon>
+    Add to cart
+  </button>
   <p>{{ product.description }}</p>
 </article>
 }

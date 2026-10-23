@@ -1,4 +1,4 @@
-/* No preflight: Material sets the base, and the catalog and cart screens rely on browser defaults. */
+/* No preflight: Material sets the base, and screens style themselves with Material components and these utilities. */
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
@@ -13,6 +13,36 @@
   --color-surface-container: var(--mat-sys-surface-container);
   --color-outline-variant: var(--mat-sys-outline-variant);
   --font-sans: system-ui, sans-serif;
+
+  --radius-xs: var(--mat-sys-corner-extra-small);
+  --radius-sm: var(--mat-sys-corner-small);
+  --radius-md: var(--mat-sys-corner-medium);
+  --radius-lg: var(--mat-sys-corner-large);
+  --radius-xl: var(--mat-sys-corner-extra-large);
+  --radius-full: var(--mat-sys-corner-full);
+
+  --shadow-1: var(--mat-sys-level1);
+  --shadow-2: var(--mat-sys-level2);
+  --shadow-3: var(--mat-sys-level3);
+  --shadow-4: var(--mat-sys-level4);
+  --shadow-5: var(--mat-sys-level5);
+}
+
+/* Material type tokens are `font` shorthands, so they are utilities rather than theme variables. */
+@utility text-title-large {
+  font: var(--mat-sys-title-large);
+}
+
+@utility text-title-medium {
+  font: var(--mat-sys-title-medium);
+}
+
+@utility text-body-medium {
+  font: var(--mat-sys-body-medium);
+}
+
+@utility text-label-large {
+  font: var(--mat-sys-label-large);
 }
 
 /* Static: theme.scss uses these outside of utilities, so they are always emitted. */

@@ -1,36 +1,65 @@
-<h1>Cart</h1>
+<h1 class="text-title-large">Cart</h1>
 
 @if (total(); as total) {
-<ul>
-  @for (row of rows(); track row.line.item.productId) {
+<ul class="m-0 list-none p-0">
+  @for (row of rows(); track row.line.item.productId; let last = $last) {
   <li>
-    <img [ngSrc]="row.line.item.thumbnail" [alt]="row.line.item.title" width="80" height="80" />
-    <a [routerLink]="['/catalog', row.line.item.productId]">{{ row.line.item.title }}</a>
-    <span>{{ row.unitPrice }}</span>
-    <button
-      type="button"
-      aria-label="Decrease quantity"
-      [disabled]="row.line.quantity === 1"
-      (click)="cart.decrease(row.line.item.productId)"
-    >
-      -
-    </button>
-    <span aria-label="Quantity">{{ row.line.quantity }}</span>
-    <button
-      type="button"
-      aria-label="Increase quantity"
-      (click)="cart.increase(row.line.item.productId)"
-    >
-      +
-    </button>
-    <span>{{ row.lineTotal }}</span>
-    <button type="button" aria-label="Remove" (click)="cart.remove(row.line.item.productId)">
-      Remove
-    </button>
+    <div class="flex flex-wrap items-center gap-4 py-3">
+      <img
+        [ngSrc]="row.line.item.thumbnail"
+        [alt]="row.line.item.title"
+        width="80"
+        height="80"
+        class="rounded-sm"
+      />
+      <div class="grid flex-1 gap-1">
+        <a
+          [routerLink]="['/catalog', row.line.item.productId]"
+          class="text-inherit text-title-medium"
+          >{{ row.line.item.title }}</a
+        >
+        <span class="text-on-surface-variant text-body-medium">{{ row.unitPrice }}</span>
+      </div>
+      <div class="flex items-center">
+        <button
+          mat-icon-button
+          type="button"
+          class="pressable"
+          aria-label="Decrease quantity"
+          [disabled]="row.line.quantity === 1"
+          (click)="cart.decrease(row.line.item.productId)"
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <span aria-label="Quantity" class="min-w-6 text-center">{{ row.line.quantity }}</span>
+        <button
+          mat-icon-button
+          type="button"
+          class="pressable"
+          aria-label="Increase quantity"
+          (click)="cart.increase(row.line.item.productId)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <span class="min-w-20 text-right text-label-large">{{ row.lineTotal }}</span>
+      <button
+        mat-icon-button
+        type="button"
+        class="pressable"
+        aria-label="Remove"
+        (click)="cart.remove(row.line.item.productId)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    @if (!last) {
+    <mat-divider />
+    }
   </li>
   }
 </ul>
-<p>Cart total: {{ total }}</p>
+<p class="text-right text-title-medium">Cart total: {{ total }}</p>
 } @else {
 <p>Your cart is empty</p>
 }

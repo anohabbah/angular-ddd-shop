@@ -1,27 +1,38 @@
-<input
-  #search
-  type="search"
-  placeholder="Search products"
-  aria-label="Search products"
-  [value]="store.searchTerm()"
-  (input)="store.setSearchTerm(search.value)"
-/>
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Search products</mat-label>
+  <input
+    #search
+    matInput
+    type="search"
+    [value]="store.searchTerm()"
+    (input)="store.setSearchTerm(search.value)"
+  />
+</mat-form-field>
 
 @if (store.products.isLoading()) {
-<output>Loading products…</output>
+<mat-progress-bar mode="indeterminate" aria-label="Loading products" />
 } @else if (store.products.error()) {
 <p role="alert">Products could not be loaded.</p>
-<button type="button" (click)="store.reload()">Try again</button>
+<button mat-stroked-button type="button" class="pressable" (click)="store.reload()">
+  Try again
+</button>
 } @else if (store.hasNoMatches()) {
 <p>No products match "{{ store.settledSearchTerm() }}"</p>
 } @else if (store.products.hasValue()) {
-<ul>
+<ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
   @for (product of store.products.value(); track product.id) {
   <li>
-    <a [routerLink]="[product.id]">
-      <app-product-thumbnail [product]="product" [size]="96" />
-      <h2>{{ product.title }}</h2>
-      <app-price-tag [product]="product" />
+    <a
+      [routerLink]="[product.id]"
+      class="block h-full pressable rounded-md text-inherit no-underline"
+    >
+      <mat-card appearance="outlined" class="h-full">
+        <mat-card-content class="grid gap-1">
+          <app-product-thumbnail [product]="product" [size]="96" />
+          <h2 class="m-0 text-title-medium">{{ product.title }}</h2>
+          <app-price-tag [product]="product" />
+        </mat-card-content>
+      </mat-card>
     </a>
   </li>
   }

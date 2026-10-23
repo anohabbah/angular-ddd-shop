@@ -5,5 +5,5 @@
 }
 
 .list {
-  opacity: 0.6;
+  color: var(--mat-sys-on-surface-variant);
 }

@@ -3,5 +3,5 @@
 }
 
 rect {
-  fill: #eee;
+  fill: var(--mat-sys-surface-container-highest);
 }

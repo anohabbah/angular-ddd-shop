@@ -1,5 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { CartStore } from '@ngsample/cart/application';
 import { lineTotal } from '@ngsample/cart/domain';
@@ -7,7 +10,7 @@ import { formatMoney } from '@ngsample/shared/domain';
 
 @Component({
   selector: 'app-cart-page',
-  imports: [NgOptimizedImage, RouterLink],
+  imports: [NgOptimizedImage, RouterLink, MatIconButton, MatDivider, MatIcon],
   templateUrl: './cart-page.html',
 })
 export class CartPage {

@@ -22,12 +22,13 @@ rules:
   tasks:
     - The first task proposes the test seams (public interfaces under test, one line each on what it catches and misses) and waits for user confirmation; no test task may target an unconfirmed seam
     - Every implementation task is one vertical slice written as "Red - <behavior> at <seam>" followed by "Green - minimal code to pass"; never group tests ahead of the code they cover
-    - Order slices inward-out - domain functions first, then application stores, then ui
+    - Order slices inward-out - domain functions first, then application stores, then e2e
+    - e2e locators by role, label or text only; no CSS selectors or test ids
     - Expected values in tests come from the spec or worked examples, never recomputed the way the code does
     - Refactoring is a separate final review task, not part of a slice
     - TDD-exempt tasks (config, generated code, docs) are marked "(exempt)"; generating a new Nx lib is an exempt task that comes before its first slice
     - Boundary parsing gets its own slice - Red with invalid input rejected at the adapter or form
-    - End with a task to run pnpm nx build and pnpm nx test
+    - End with a task to run pnpm nx build, pnpm nx test and pnpm nx e2e e2e
 
 operations:
   apply:
