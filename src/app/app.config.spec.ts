@@ -45,7 +45,7 @@ describe('appConfig', () => {
     (harness.routeNativeElement?.querySelector('li a') as HTMLAnchorElement).click();
     await vi.advanceTimersByTimeAsync(0);
     TestBed.tick();
-    http.expectOne('https://dummyjson.com/products/1').flush(mascara);
+    http.expectOne((r) => r.url === 'https://dummyjson.com/products/1').flush(mascara);
     await stable();
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent?.trim()).toBe(
       'Essence Mascara Lash Princess',

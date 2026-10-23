@@ -19,6 +19,9 @@ const DummyProductDto = z.object({
 });
 type DummyProductDto = z.infer<typeof DummyProductDto>;
 
+/** Asks dummyjson for only the fields the DTO parses. */
+const SELECT = Object.keys(DummyProductDto.shape).join(',');
+
 const DummyProductPageDto = z.object({ products: z.array(DummyProductDto) });
 
 function toProduct(dto: DummyProductDto): Product {
@@ -44,15 +47,20 @@ export class DummyJsonProductSource extends ProductSource {
 
   async search(term: string, abortSignal: AbortSignal): Promise<readonly Product[]> {
     const request = term
-      ? this.#http.get(`${API_URL}/products/search`, { params: { q: term, limit: PAGE_SIZE } })
-      : this.#http.get(`${API_URL}/products`, { params: { limit: PAGE_SIZE } });
+      ? this.#http.get(`${API_URL}/products/search`, {
+          params: { q: term, limit: PAGE_SIZE, select: SELECT },
+        })
+      : this.#http.get(`${API_URL}/products`, { params: { limit: PAGE_SIZE, select: SELECT } });
     const body = await untilAborted(request, abortSignal);
     return DummyProductPageDto.parse(body).products.map(toProduct);
   }
 
   async findById(id: ProductId, abortSignal: AbortSignal): Promise<Product | undefined> {
     try {
-      const body = await untilAborted(this.#http.get(`${API_URL}/products/${id}`), abortSignal);
+      const body = await untilAborted(
+        this.#http.get(`${API_URL}/products/${id}`, { params: { select: SELECT } }),
+        abortSignal,
+      );
       return toProduct(DummyProductDto.parse(body));
     } catch (error) {
       if (error instanceof HttpErrorResponse && error.status === 404) return undefined;
