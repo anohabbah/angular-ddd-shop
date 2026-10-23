@@ -95,6 +95,20 @@ test.describe('App shell', () => {
       await expect(toggle).toHaveAttribute('aria-expanded', 'true');
       await expect(navigation).toBeVisible();
     });
+
+    test('closes the navigation once a link in it is followed', async ({ page }) => {
+      await page.goto('/catalog');
+      await expect(page.getByRole('heading', { name: 'Catalog', level: 1 })).toBeVisible();
+      const navigation = page.getByRole('navigation', { name: 'Main' });
+      const toggle = page.getByRole('button', { name: 'Open navigation' });
+      await toggle.click();
+
+      await navigation.getByRole('link', { name: 'Cart', exact: true }).click();
+
+      await expect(page).toHaveURL('/cart');
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(navigation).toBeHidden();
+    });
   });
 
   for (const { width, height, narrow } of [
