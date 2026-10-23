@@ -50,9 +50,14 @@ export class App {
     },
   );
   protected readonly mode = computed(() => (this.wide() ? 'side' : 'over'));
+  /** In-app navigations only: the shop's first navigation must not undo the shopper's toggle. */
+  private readonly inAppNavigation = computed(() => {
+    const navigation = this.router.lastSuccessfulNavigation();
+    return navigation?.previousNavigation ? navigation : undefined;
+  });
   /** Open when wide, closed when narrow; the shopper's toggle lasts until the next navigation. */
   protected readonly opened = linkedSignal({
-    source: () => ({ wide: this.wide(), navigation: this.router.lastSuccessfulNavigation() }),
+    source: () => ({ wide: this.wide(), navigation: this.inAppNavigation() }),
     computation: ({ wide }) => wide,
   });
 

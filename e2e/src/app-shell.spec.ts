@@ -69,6 +69,32 @@ test.describe('App shell', () => {
       expect(navigation.topRightRadius).toBe('16px');
       expect(navigation.bottomRightRadius).toBe('16px');
     });
+
+    test('keeps the navigation open when opened while the shop is still starting', async ({
+      page,
+    }) => {
+      // Hold the lazy Catalog chunk, so the shop's first navigation is still pending.
+      let release = () => undefined as void;
+      const held = new Promise<void>((resolve) => (release = resolve));
+      await page.route('**/*.js', async (route) => {
+        const response = await route.fetch();
+        const body = await response.text();
+        if (body.includes('Search products')) await held;
+        await route.fulfill({ response, body });
+      });
+      await page.goto('/catalog');
+      const navigation = page.getByRole('navigation', { name: 'Main' });
+      const toggle = page.getByRole('button', { name: 'Open navigation' });
+
+      await toggle.click();
+      await expect(navigation).toBeVisible();
+      release();
+      await expect(page.getByRole('heading', { name: 'Catalog', level: 1 })).toBeVisible();
+
+      // A closing drawer still shows while it slides out, unlike the toggle's state.
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect(navigation).toBeVisible();
+    });
   });
 
   for (const { width, height, narrow } of [
@@ -99,8 +125,9 @@ test.describe('App shell', () => {
           await navigation.elementHandle(),
         );
 
-        expect(inset.left).toBeGreaterThanOrEqual(12);
-        expect(inset.right).toBeGreaterThanOrEqual(12);
+        // Mid-slide, the drawer's fractional transform leaves sub-pixel float error (11.9999995).
+        expect(inset.left).toBeGreaterThanOrEqual(11.99);
+        expect(inset.right).toBeGreaterThanOrEqual(11.99);
       });
     });
   }
