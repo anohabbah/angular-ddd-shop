@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { box } from './support/box';
 import { expect, mascara, test } from './support/fixtures';
 import { addToCart, openCart } from './support/shopper';
 
@@ -14,6 +15,36 @@ test.describe('Product detail', () => {
     await expect(main.getByText(mascara.category)).toBeVisible();
     await expect(main).toContainText('$8.94');
     await expect(main.getByRole('deletion')).toHaveText('$9.99');
+  });
+
+  test.describe('on a wide viewport', () => {
+    test.use({ viewport: { width: 1280, height: 800 } });
+
+    test('shows the thumbnail 300px square', async ({ page }) => {
+      await page.goto('/catalog/1');
+
+      const thumbnail = page.getByRole('main').getByRole('presentation');
+      await expect(thumbnail).toBeVisible();
+      const { width, height } = await box(thumbnail);
+      expect({ width, height }).toEqual({ width: 300, height: 300 });
+    });
+  });
+
+  test.describe('on a narrow viewport', () => {
+    test.use({ viewport: { width: 320, height: 640 } });
+
+    test('shrinks the thumbnail to a square that fits the main content', async ({ page }) => {
+      await page.goto('/catalog/1');
+
+      const main = page.getByRole('main');
+      const thumbnail = main.getByRole('presentation');
+      await expect(thumbnail).toBeVisible();
+      const content = await box(main);
+      const { x, width, height } = await box(thumbnail);
+      // main has 16px padding on each side.
+      expect(x + width).toBeLessThanOrEqual(content.x + content.width - 16);
+      expect(height).toBe(width);
+    });
   });
 
   test('says the product is not found, without asking the product source, for a non-numeric id', async ({

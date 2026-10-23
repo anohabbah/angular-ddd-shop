@@ -1,7 +1,13 @@
 import { I18nPluralPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MatCard, MatCardContent } from '@angular/material/card';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardTitle,
+} from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBar } from '@angular/material/progress-bar';
@@ -18,6 +24,9 @@ import { ProductThumbnail } from '../product-thumbnail/product-thumbnail';
     MatButton,
     MatCard,
     MatCardContent,
+    MatCardHeader,
+    MatCardImage,
+    MatCardTitle,
     MatFormFieldModule,
     MatInputModule,
     MatProgressBar,

@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, input, linkedSignal } from '@angular/core';
+import { booleanAttribute, Component, computed, input, linkedSignal } from '@angular/core';
 import type { Product } from '@ngsample/catalog/domain';
 
 @Component({
@@ -10,7 +10,8 @@ import type { Product } from '@ngsample/catalog/domain';
 })
 export class ProductThumbnail {
   readonly product = input.required<Product>();
-  readonly size = input.required<number>();
+  /** Loads the image first, for a thumbnail that may be the page's largest contentful paint. */
+  readonly priority = input(false, { transform: booleanAttribute });
 
   // Resets when a different product comes in.
   readonly #loadFailed = linkedSignal({ source: this.product, computation: () => false });

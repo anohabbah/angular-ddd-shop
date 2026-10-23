@@ -12,8 +12,8 @@
 <h1 class="text-title-large">Product</h1>
 <p role="alert">Product could not be loaded. Please try again later.</p>
 } @else if (detail.product.hasValue()) { @let product = detail.product.value();
-<article class="grid max-w-160 gap-2">
-  <app-product-thumbnail [product]="product" [size]="300" />
+<article class="grid max-w-160 grid-cols-1 gap-2">
+  <app-product-thumbnail class="w-75 max-w-full" [product]="product" priority />
   <h1 class="m-0 text-title-large">{{ product.title }}</h1>
   <p class="m-0 text-on-surface-variant capitalize">{{ product.category }}</p>
   <app-price-tag [product]="product" />

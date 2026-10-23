@@ -1,4 +1,16 @@
+import type { Locator } from '@playwright/test';
+import { box } from './support/box';
 import { expect, eyeshadow, iphone, mascara, missingThumbnail, test } from './support/fixtures';
+
+/** Expects the media to start at the entry's top edge, span its width, and be square, within 2px. */
+async function expectSpansEntry(media: Locator, entry: Locator) {
+  await expect(media).toBeVisible();
+  const mediaBox = await box(media);
+  const entryBox = await box(entry);
+  expect(Math.abs(mediaBox.y - entryBox.y)).toBeLessThanOrEqual(2);
+  expect(Math.abs(mediaBox.width - entryBox.width)).toBeLessThanOrEqual(2);
+  expect(Math.abs(mediaBox.height - mediaBox.width)).toBeLessThanOrEqual(2);
+}
 
 test.describe('Product list', () => {
   const products = (page: import('@playwright/test').Page) =>
@@ -159,5 +171,52 @@ test.describe('Product list', () => {
     await searchBox.fill('zzzz');
     await expect(status).toHaveText('No products match "zzzz"');
     await expect(searchBox).toBeFocused();
+  });
+
+  test.describe('entry layout on a wide viewport', () => {
+    test.use({ viewport: { width: 1280, height: 800 } });
+
+    test('spans the entry with its thumbnail', async ({ page }) => {
+      await page.goto('/catalog');
+
+      const entry = product(page, mascara.title);
+      await expectSpansEntry(entry.getByRole('presentation'), entry);
+    });
+
+    test("fills the thumbnail's square with the placeholder", async ({ page, productSource }) => {
+      productSource.products = [{ ...mascara, thumbnail: missingThumbnail }, eyeshadow, iphone];
+      await page.goto('/catalog');
+
+      const entry = product(page, mascara.title);
+      await expectSpansEntry(entry.getByRole('img', { includeHidden: true }), entry);
+    });
+
+    test('lines up the Final prices across a row', async ({ page }) => {
+      await page.goto('/catalog');
+      const wrapping = product(page, mascara.title);
+      const oneLine = product(page, iphone.title);
+
+      // Preconditions: the entries share a row, and their titles differ in height,
+      // or the prices line up trivially.
+      expect((await box(wrapping)).y).toBe((await box(oneLine)).y);
+      const wrappingTitle = await box(wrapping.getByRole('heading', { name: mascara.title }));
+      const oneLineTitle = await box(oneLine.getByRole('heading', { name: iphone.title }));
+      expect(wrappingTitle.height).toBeGreaterThan(oneLineTitle.height);
+
+      const wrappingPrice = await box(wrapping.getByText('Final price'));
+      const oneLinePrice = await box(oneLine.getByText('Final price'));
+      expect(Math.abs(wrappingPrice.y - oneLinePrice.y)).toBeLessThanOrEqual(1);
+    });
+  });
+
+  test.describe('entry layout on a narrow viewport', () => {
+    test.use({ viewport: { width: 320, height: 640 } });
+
+    test('spans the entry with its thumbnail', async ({ page }) => {
+      await page.goto('/catalog');
+
+      const entry = product(page, mascara.title);
+      await expectSpansEntry(entry.getByRole('presentation'), entry);
+    });
   });
 });

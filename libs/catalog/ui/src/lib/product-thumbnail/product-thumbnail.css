@@ -1,5 +1,18 @@
 :host {
+  position: relative;
   display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+img {
+  object-fit: contain;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 rect {

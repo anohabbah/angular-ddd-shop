@@ -1,4 +1,5 @@
 import type { Locator } from '@playwright/test';
+import { box } from './support/box';
 import { expect, iphone, mascara, test } from './support/fixtures';
 import { productInList } from './support/shopper';
 
@@ -16,13 +17,6 @@ function paintedBox(locator: Locator) {
       bottomRightRadius: style.borderBottomRightRadius,
     };
   });
-}
-
-/** The element's box, failing the test when the element isn't rendered. */
-async function box(locator: Locator) {
-  const rendered = await locator.boundingBox();
-  if (!rendered) throw new Error(`${locator} is not rendered`);
-  return rendered;
 }
 
 test.describe('App shell', () => {
@@ -154,7 +148,9 @@ test.describe('App shell', () => {
           );
         });
       const main = await box(page.getByRole('main'));
-      await page.mouse.move(main.x + main.width / 2, main.y + main.height / 2);
+      // The middle of main's visible part: main itself runs past the bottom of the viewport.
+      const visibleBottom = Math.min(main.y + main.height, await page.evaluate(() => innerHeight));
+      await page.mouse.move(main.x + main.width / 2, (main.y + visibleBottom) / 2);
 
       expect(await lineShown()).toBe(false);
 

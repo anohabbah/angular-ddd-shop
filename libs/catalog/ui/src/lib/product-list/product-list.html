@@ -28,16 +28,17 @@
 </button>
 } @else if (store.products.hasValue() && !store.hasNoMatches()) {
 <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
-  @for (product of store.products.value(); track product.id) {
+  @for (product of store.products.value(); track product.id; let index = $index) {
   <li>
     <a
       [routerLink]="[product.id]"
       class="block h-full pressable rounded-md text-inherit no-underline"
     >
       <mat-card appearance="outlined" class="h-full">
-        <mat-card-content class="grid gap-1">
-          <app-product-thumbnail [product]="product" [size]="96" />
-          <h2 class="m-0 text-title-medium">{{ product.title }}</h2>
+        <!-- The main column (max-w-5xl in src/app/app.html) fits at most four entries in a row, so the first row is among them. -->
+        <app-product-thumbnail mat-card-image [product]="product" [priority]="index < 4" />
+        <mat-card-header><h2 mat-card-title>{{ product.title }}</h2></mat-card-header>
+        <mat-card-content class="mt-auto pt-2">
           <app-price-tag [product]="product" />
         </mat-card-content>
       </mat-card>

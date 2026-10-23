@@ -15,6 +15,15 @@ html {
       container-width: 16rem,
     )
   );
+  @include mat.card-overrides(
+    (
+      title-text-font: var(--mat-sys-title-medium-font),
+      title-text-line-height: var(--mat-sys-title-medium-line-height),
+      title-text-size: var(--mat-sys-title-medium-size),
+      title-text-tracking: var(--mat-sys-title-medium-tracking),
+      title-text-weight: var(--mat-sys-title-medium-weight),
+    )
+  );
   @include mat.strong-focus-indicators(
     (
       border-color: var(--mat-sys-primary),
