@@ -1,6 +1,52 @@
+@use '@angular/material' as mat;
+
 :host {
   display: block;
   height: 100%;
+}
+
+// A side-mode drawer sits beside the page, so it takes its own tone and square corners.
+// Over mode keeps the global surface background and the rounded corner of a floating drawer.
+mat-sidenav.mat-drawer-side {
+  @include mat.sidenav-overrides(
+    (
+      container-background-color: var(--mat-sys-surface-container-low),
+      container-shape: 0,
+    )
+  );
+}
+
+// Insets the current-page pill from both drawer edges. A Tailwind class would lose to
+// Material's unlayered list padding.
+mat-nav-list {
+  padding-inline: 12px;
+}
+
+// A bottom line on the sticky toolbar once the content scrolls under it. A pseudo-element keeps
+// the header 64px tall, in step with the scroll padding in theme.scss.
+header::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+  opacity: 0;
+}
+
+// Without scroll timelines the shorthand would run as a 0s animation and show the line at the
+// top, so unsupported browsers keep no line.
+@supports (animation-timeline: scroll()) {
+  header::after {
+    animation: toolbar-boundary linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0 24px;
+  }
+}
+
+@keyframes toolbar-boundary {
+  to {
+    opacity: 1;
+  }
 }
 
 // Focus on the main region only places the reading position; it is not a control.

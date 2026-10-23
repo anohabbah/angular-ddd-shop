@@ -13,32 +13,22 @@ type Setup = {
   narrow: boolean;
 };
 
-const setups: Setup[] = [
-  {
-    name: 'wide light 1280',
-    viewport: { width: 1280, height: 800 },
-    colorScheme: 'light',
-    narrow: false,
-  },
-  {
-    name: 'wide dark 1280',
-    viewport: { width: 1280, height: 800 },
-    colorScheme: 'dark',
-    narrow: false,
-  },
-  {
-    name: 'narrow light 390',
-    viewport: { width: 390, height: 844 },
-    colorScheme: 'light',
-    narrow: true,
-  },
-  {
-    name: 'reflow dark 320',
-    viewport: { width: 320, height: 640 },
-    colorScheme: 'dark',
-    narrow: true,
-  },
+const widths = [
+  { label: 'widest', viewport: { width: 1920, height: 1080 }, narrow: false },
+  { label: 'wide', viewport: { width: 1280, height: 800 }, narrow: false },
+  { label: 'narrow', viewport: { width: 390, height: 844 }, narrow: true },
+  { label: 'reflow', viewport: { width: 320, height: 640 }, narrow: true },
 ];
+
+/** Every width in both color schemes. */
+const setups: Setup[] = widths.flatMap(({ label, viewport, narrow }) =>
+  (['light', 'dark'] as const).map((colorScheme) => ({
+    name: `${label} ${colorScheme} ${viewport.width}`,
+    viewport,
+    colorScheme,
+    narrow,
+  })),
+);
 
 type State = {
   name: string;

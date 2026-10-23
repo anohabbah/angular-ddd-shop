@@ -13,7 +13,7 @@
 
 ### States and conditions covered
 
-Each page is covered in every state of the conformance matrix, in light and dark color schemes, at 1280, 390 and 320 CSS px wide:
+Each page is covered in every state of the conformance matrix at four widths, 1920, 1280, 390 and 320 CSS px, each in both the light and the dark color scheme:
 
 - product list: loaded, loading, failed, no matches
 - product detail: loaded, loading, not found, failed
@@ -84,7 +84,7 @@ Verdicts: Supports, Partially supports, Does not support, Not applicable (the pa
 | ----------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1.2.4 Captions (Live)                           | Not applicable | No live media                                                                                                                                                               |
 | 1.2.5 Audio Description (Prerecorded)           | Not applicable | No video                                                                                                                                                                    |
-| 1.3.4 Orientation                               | Supports       | No orientation lock. The matrix covers portrait (390 × 844, 320 × 640) and landscape (1280 × 800) viewports. A                                                              |
+| 1.3.4 Orientation                               | Supports       | No orientation lock. The matrix covers portrait (390 × 844, 320 × 640) and landscape (1920 × 1080, 1280 × 800) viewports. A                                                 |
 | 1.3.5 Identify Input Purpose                    | Not applicable | The only input is a Search term, not information about the Shopper                                                                                                          |
 | 1.4.3 Contrast (Minimum)                        | Supports       | A (`color-contrast`) in both schemes. M covers the cases axe could not decide                                                                                               |
 | 1.4.4 Resize Text                               | Supports       | Content reflows without loss at 320 CSS px, the width of 1280 px at 400% zoom. A                                                                                            |
@@ -117,12 +117,12 @@ Measured on 2026-10-22 from computed colors in Chromium, at 1280 px, with the ic
 
 The indicator is a 3 px ring in `--mat-sys-primary`: light `rgb(0, 92, 187)`, dark `rgb(171, 199, 255)`.
 
-| Element                  | Adjacent color                          | Light  | Dark    |
-| ------------------------ | --------------------------------------- | ------ | ------- |
-| Toolbar cart link        | Toolbar (surface)                       | 6.17:1 | 10.92:1 |
-| Current Catalog nav link | Current-page pill (secondary container) | 5.00:1 | 5.49:1  |
-| Current Catalog nav link | Navigation background (surface)         | 6.17:1 | 10.92:1 |
-| Product card link        | Page (surface)                          | 6.17:1 | 10.92:1 |
+| Element                  | Adjacent color                                | Light  | Dark    |
+| ------------------------ | --------------------------------------------- | ------ | ------- |
+| Toolbar cart link        | Toolbar (surface)                             | 6.17:1 | 10.92:1 |
+| Current Catalog nav link | Current-page pill (secondary container)       | 5.00:1 | 5.49:1  |
+| Current Catalog nav link | Navigation background (surface container low) | 5.85:1 | 10.11:1 |
+| Product card link        | Page (surface)                                | 6.17:1 | 10.92:1 |
 
 ### Contrast cases axe marks incomplete (1.4.3)
 
@@ -131,7 +131,7 @@ axe could not determine the background of the navigation link text, which other 
 | Text                    | Background            | Light   | Dark    |
 | ----------------------- | --------------------- | ------- | ------- |
 | Current navigation link | Current-page pill     | 13.30:1 | 7.24:1  |
-| Other navigation link   | Navigation background | 16.41:1 | 14.41:1 |
+| Other navigation link   | Navigation background | 15.57:1 | 13.35:1 |
 | Search field text       | Field background      | 16.41:1 | 14.41:1 |
 
 All are 16 px regular text, so the requirement is 4.5:1.

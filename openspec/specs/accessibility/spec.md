@@ -8,7 +8,7 @@ States the shop's accessibility contract: the WCAG conformance target, the pages
 
 ### Requirement: Conformance target
 
-Every page of the shop SHALL conform to WCAG 2.2 level AA in each state the shopper can reach, in both color schemes, at viewport widths of 1280, 390 and 320 CSS px. The conformance matrix SHALL include, at least: product list loaded, loading, failed and with no matches; product detail loaded, loading, not found and failed; cart page empty and with Cart lines; the navigation open on a narrow viewport.
+Every page of the shop SHALL conform to WCAG 2.2 level AA in each state the shopper can reach, in both color schemes, at viewport widths of 1920, 1280, 390 and 320 CSS px. The conformance matrix SHALL include, at least: product list loaded, loading, failed and with no matches; product detail loaded, loading, not found and failed; cart page empty and with Cart lines; the navigation open on a narrow viewport.
 
 #### Scenario: Every cell of the matrix
 
@@ -19,6 +19,11 @@ Every page of the shop SHALL conform to WCAG 2.2 level AA in each state the shop
 
 - **WHEN** a change makes one cell of the conformance matrix produce an automated WCAG 2.2 A or AA violation
 - **THEN** the end-to-end verification fails and names the page, state, color scheme, width and violated rule
+
+#### Scenario: Widest layout
+
+- **WHEN** any page of the conformance matrix is shown 1920 CSS px wide
+- **THEN** an automated WCAG 2.2 A and AA check reports no violations
 
 ### Requirement: Page titles
 

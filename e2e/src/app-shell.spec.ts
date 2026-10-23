@@ -1,5 +1,29 @@
+import type { Locator } from '@playwright/test';
 import { expect, iphone, mascara, test } from './support/fixtures';
 import { productInList } from './support/shopper';
+
+/** The computed style of the element's first ancestor, itself included, that paints a background. */
+function paintedBox(locator: Locator) {
+  return locator.evaluate((element) => {
+    let box: Element | null = element;
+    while (box && getComputedStyle(box).backgroundColor === 'rgba(0, 0, 0, 0)') {
+      box = box.parentElement;
+    }
+    const style = getComputedStyle(box ?? document.documentElement);
+    return {
+      backgroundColor: style.backgroundColor,
+      topRightRadius: style.borderTopRightRadius,
+      bottomRightRadius: style.borderBottomRightRadius,
+    };
+  });
+}
+
+/** The element's box, failing the test when the element isn't rendered. */
+async function box(locator: Locator) {
+  const rendered = await locator.boundingBox();
+  if (!rendered) throw new Error(`${locator} is not rendered`);
+  return rendered;
+}
 
 test.describe('App shell', () => {
   test.describe('on a wide viewport', () => {
@@ -15,6 +39,130 @@ test.describe('App shell', () => {
       await expect(navigation).toHaveAccessibleName('Main');
       await expect(navigation.getByRole('link', { name: 'Catalog', exact: true })).toBeVisible();
       await expect(navigation.getByRole('link', { name: 'Cart', exact: true })).toBeVisible();
+    });
+  });
+
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test.describe(`on a wide viewport, ${colorScheme}`, () => {
+      test.use({ viewport: { width: 1280, height: 800 }, colorScheme });
+
+      test('sets the navigation apart from the main content by its background', async ({
+        page,
+      }) => {
+        await page.goto('/catalog');
+
+        const navigation = await paintedBox(page.getByRole('navigation', { name: 'Main' }));
+        const main = await paintedBox(page.getByRole('main'));
+
+        expect(navigation.backgroundColor).not.toBe(main.backgroundColor);
+        if (colorScheme === 'light') {
+          expect(navigation.topRightRadius).toBe('0px');
+          expect(navigation.bottomRightRadius).toBe('0px');
+        }
+      });
+    });
+  }
+
+  test.describe('on a narrow viewport with the navigation open', () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+
+    test('keeps the navigation’s rounded outer corner', async ({ page }) => {
+      await page.goto('/catalog');
+      await page.getByRole('button', { name: 'Open navigation' }).click();
+
+      const navigation = await paintedBox(page.getByRole('navigation', { name: 'Main' }));
+
+      expect(navigation.topRightRadius).toBe('16px');
+      expect(navigation.bottomRightRadius).toBe('16px');
+    });
+  });
+
+  for (const { width, height, narrow } of [
+    { width: 1280, height: 800, narrow: false },
+    { width: 390, height: 844, narrow: true },
+  ]) {
+    test.describe(`at ${width}px${narrow ? ' with the navigation open' : ''}`, () => {
+      test.use({ viewport: { width, height } });
+
+      test('insets the Catalog navigation link 12px from both edges of the navigation', async ({
+        page,
+      }) => {
+        await page.goto('/catalog');
+        if (narrow) {
+          await page.getByRole('button', { name: 'Open navigation' }).click();
+        }
+
+        const navigation = page.getByRole('navigation', { name: 'Main' });
+        const link = navigation.getByRole('link', { name: 'Catalog', exact: true });
+        // Both boxes in one frame, since the narrow drawer may still be sliding in.
+        const inset = await link.evaluate(
+          (linkElement, navigationElement) => {
+            if (!navigationElement) throw new Error('The navigation is not rendered');
+            const outer = navigationElement.getBoundingClientRect();
+            const inner = linkElement.getBoundingClientRect();
+            return { left: inner.left - outer.left, right: outer.right - inner.right };
+          },
+          await navigation.elementHandle(),
+        );
+
+        expect(inset.left).toBeGreaterThanOrEqual(12);
+        expect(inset.right).toBeGreaterThanOrEqual(12);
+      });
+    });
+  }
+
+  for (const viewport of [
+    { width: 1920, height: 1080 },
+    { width: 1280, height: 800 },
+  ]) {
+    test.describe(`at ${viewport.width}px`, () => {
+      test.use({ viewport });
+
+      test('lines the toolbar up with the main content column', async ({ page }) => {
+        await page.goto('/catalog');
+        await expect(productInList(page, mascara.title)).toBeVisible();
+
+        const banner = page.getByRole('banner');
+        const shopName = await box(banner.getByText('ngsample'));
+        const cartLink = await box(banner.getByRole('link', { name: /^Cart/ }));
+        const heading = await box(page.getByRole('heading', { level: 1, name: 'Catalog' }));
+        const column = await box(page.getByRole('main').getByRole('list'));
+
+        expect(shopName.x).toBeCloseTo(heading.x, 0);
+        expect(cartLink.x + cartLink.width).toBeCloseTo(column.x + column.width, 0);
+      });
+    });
+  }
+
+  test.describe('while the product list scrolls', () => {
+    // Short enough for the three stubbed products to overflow.
+    test.use({ viewport: { width: 390, height: 500 } });
+
+    test('shows a toolbar bottom line only away from the top', async ({ page }) => {
+      await page.goto('/catalog');
+      await expect(productInList(page, mascara.title)).toBeVisible();
+      const banner = page.getByRole('banner');
+      // An absent ::after still reports opacity 1, so a line also needs content, height and colour.
+      const lineShown = () =>
+        banner.evaluate((header) => {
+          const line = getComputedStyle(header, '::after');
+          return (
+            line.content !== 'none' &&
+            line.opacity === '1' &&
+            parseFloat(line.height) > 0 &&
+            line.backgroundColor !== 'rgba(0, 0, 0, 0)'
+          );
+        });
+      const main = await box(page.getByRole('main'));
+      await page.mouse.move(main.x + main.width / 2, main.y + main.height / 2);
+
+      expect(await lineShown()).toBe(false);
+
+      await page.mouse.wheel(0, 400);
+      await expect.poll(lineShown).toBe(true);
+
+      await page.mouse.wheel(0, -400);
+      await expect.poll(lineShown).toBe(false);
     });
   });
 
