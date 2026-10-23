@@ -4,3 +4,4 @@ allowBuilds:
   lmdb: false
   msgpackr-extract: false
   nx: true
+  simple-git-hooks: false

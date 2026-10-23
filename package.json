@@ -6,7 +6,11 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec nano-staged"
   },
   "dependencies": {
     "@angular/cdk": "~22.2.4",
@@ -53,11 +57,13 @@
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.13.0",
     "jsdom": "^27.1.0",
+    "nano-staged": "^1.0.2",
     "nx": "24.0.0",
     "postcss": "^8.5.31",
     "prettier": "^3.9.10",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "simple-git-hooks": "^2.14.0",
     "tailwindcss": "^4.3.3",
     "tslib": "^2.3.0",
     "typescript": "~6.0.3",
