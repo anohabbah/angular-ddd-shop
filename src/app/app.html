@@ -5,22 +5,20 @@
     [opened]="opened()"
     (closedStart)="opened.set(false)"
   >
-    <nav>
-      <mat-nav-list>
-        @for (item of navItems; track item.path) {
-        <a
-          mat-list-item
-          class="pressable"
-          [routerLink]="item.path"
-          routerLinkActive
-          #link="routerLinkActive"
-          [activated]="link.isActive"
-          ariaCurrentWhenActive="page"
-          >{{ item.label }}</a
-        >
-        }
-      </mat-nav-list>
-    </nav>
+    <mat-nav-list aria-label="Main">
+      @for (item of navItems; track item.path) {
+      <a
+        mat-list-item
+        class="pressable"
+        [routerLink]="item.path"
+        routerLinkActive
+        #link="routerLinkActive"
+        [activated]="link.isActive"
+        ariaCurrentWhenActive="page"
+        >{{ item.label }}</a
+      >
+      }
+    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <header class="sticky top-0 z-10">
@@ -42,7 +40,7 @@
         <app-cart-link />
       </mat-toolbar>
     </header>
-    <main class="mx-auto max-w-5xl p-4">
+    <main #main tabindex="-1" class="mx-auto max-w-5xl p-4">
       <router-outlet />
     </main>
   </mat-sidenav-content>

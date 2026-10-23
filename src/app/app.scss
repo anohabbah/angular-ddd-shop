@@ -2,3 +2,8 @@
   display: block;
   height: 100%;
 }
+
+// Focus on the main region only places the reading position; it is not a control.
+main:focus {
+  outline: none;
+}

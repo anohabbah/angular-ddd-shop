@@ -72,7 +72,7 @@ async function pressMenuButton(fixture: ComponentFixture<App>) {
 }
 
 const navLink = (fixture: ComponentFixture<App>, text: string) =>
-  [...(fixture.nativeElement as HTMLElement).querySelectorAll('nav a')].find(
+  [...(fixture.nativeElement as HTMLElement).querySelectorAll('[role="navigation"] a')].find(
     (a) => a.textContent?.trim() === text,
   );
 

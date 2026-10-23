@@ -1,3 +1,5 @@
+<h1 class="text-title-large">Catalog</h1>
+
 <mat-form-field appearance="outline" class="w-full">
   <mat-label>Search products</mat-label>
   <input
@@ -9,6 +11,14 @@
   />
 </mat-form-field>
 
+<p role="status" class="text-on-surface-variant">
+  @if (!store.products.isLoading()) { @if (store.hasNoMatches()) {
+  <span>No products match "{{ store.settledSearchTerm() }}"</span>
+  } @else if (store.products.hasValue()) {
+  <span>{{ store.products.value().length | i18nPlural: outcomeLabels }}</span>
+  } }
+</p>
+
 @if (store.products.isLoading()) {
 <mat-progress-bar mode="indeterminate" aria-label="Loading products" />
 } @else if (store.products.error()) {
@@ -16,9 +26,7 @@
 <button mat-stroked-button type="button" class="pressable" (click)="store.reload()">
   Try again
 </button>
-} @else if (store.hasNoMatches()) {
-<p>No products match "{{ store.settledSearchTerm() }}"</p>
-} @else if (store.products.hasValue()) {
+} @else if (store.products.hasValue() && !store.hasNoMatches()) {
 <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
   @for (product of store.products.value(); track product.id) {
   <li>

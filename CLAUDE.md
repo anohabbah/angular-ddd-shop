@@ -68,3 +68,5 @@ TDD per the `tdd` skill: agree on seams before the first test, then one red → 
 - Unit seams (Vitest), in order: domain functions (plain Vitest, no TestBed), application stores, infrastructure adapters (`HttpTestingController`).
 - UI behavior is tested end-to-end with Playwright in `e2e/`, against the product source stubbed in `e2e/src/support/fixtures.ts`. Locate elements by role, label or text only; no CSS selectors or test ids.
 - No component specs. Run `pnpm nx e2e e2e` with `pnpm nx build` and `pnpm nx test`.
+- Accessibility (WCAG 2.2 AA): `e2e/src/accessibility.spec.ts` runs axe over the conformance matrix (every page and state × light/dark × 1280/390/320 px). Never disable or exclude a rule to make it pass.
+- A change touching a `ui` lib or the app shell re-runs that gate. If it changes what a screen reader announces, repeat the affected steps of `docs/accessibility/voiceover-script.md` and update the date and affected verdicts in `docs/accessibility/conformance.md`.

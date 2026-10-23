@@ -4,10 +4,12 @@
 </a>
 
 @if (detail.notFound()) {
-<p role="alert">Product not found</p>
+<h1 class="text-title-large">Product not found</h1>
 } @else if (detail.product.isLoading()) {
+<h1 class="text-title-large">Product</h1>
 <mat-progress-bar mode="indeterminate" aria-label="Loading product" />
 } @else if (detail.product.error()) {
+<h1 class="text-title-large">Product</h1>
 <p role="alert">Product could not be loaded. Please try again later.</p>
 } @else if (detail.product.hasValue()) { @let product = detail.product.value();
 <article class="grid max-w-160 gap-2">
@@ -24,6 +26,11 @@
     <mat-icon>add_shopping_cart</mat-icon>
     Add to cart
   </button>
+  <p role="status" class="m-0">
+    @if (quantityInCart(); as quantity) { Quantity in cart: {{ quantity }}
+    <a routerLink="/cart">View cart</a>
+    }
+  </p>
   <p>{{ product.description }}</p>
 </article>
 }

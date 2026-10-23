@@ -4,8 +4,10 @@ import {
   cartTotal,
   CurrencyMismatchError,
   decreaseQuantity,
+  focusAfterRemoval,
   increaseQuantity,
   itemCount,
+  lineQuantity,
   lineTotal,
   removeLine,
 } from './cart';
@@ -132,5 +134,39 @@ describe('itemCount', () => {
 
   it('is 0 for an empty Cart', () => {
     expect(itemCount([])).toBe(0);
+  });
+});
+
+describe('lineQuantity', () => {
+  it("is the quantity of the product's Cart line", () => {
+    const lines = [
+      { item: mascara, quantity: 3 },
+      { item: eyeshadow, quantity: 1 },
+    ];
+
+    expect(lineQuantity(lines, 1)).toBe(3);
+  });
+
+  it('is absent when the product has no Cart line', () => {
+    expect(lineQuantity([{ item: eyeshadow, quantity: 1 }], 1)).toBeUndefined();
+  });
+});
+
+describe('focusAfterRemoval', () => {
+  const lines = [
+    { item: mascara, quantity: 1 },
+    { item: eyeshadow, quantity: 1 },
+  ];
+
+  it('is the product of the line that follows the removed one', () => {
+    expect(focusAfterRemoval(lines, 1)).toBe(2);
+  });
+
+  it('is the product of the line before the removed one when it was the last', () => {
+    expect(focusAfterRemoval(lines, 2)).toBe(1);
+  });
+
+  it('is absent when the removed line was the only one', () => {
+    expect(focusAfterRemoval([{ item: mascara, quantity: 1 }], 1)).toBeUndefined();
   });
 });

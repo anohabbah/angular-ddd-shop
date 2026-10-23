@@ -1,5 +1,6 @@
+import type { Page } from '@playwright/test';
 import { expect, mascara, test } from './support/fixtures';
-import { openCart } from './support/shopper';
+import { addToCart, openCart } from './support/shopper';
 
 test.describe('Product detail', () => {
   test('shows the product the URL points to, with its description, category and prices', async ({
@@ -21,7 +22,9 @@ test.describe('Product detail', () => {
   }) => {
     await page.goto('/catalog/abc');
 
-    await expect(page.getByRole('alert')).toHaveText('Product not found');
+    await expect(
+      page.getByRole('main').getByRole('heading', { level: 1, name: 'Product not found' }),
+    ).toBeVisible();
     expect(productSource.requests).toEqual([]);
   });
 
@@ -30,10 +33,12 @@ test.describe('Product detail', () => {
   }) => {
     await page.goto('/catalog/99999');
 
-    await expect(page.getByRole('alert')).toHaveText('Product not found');
+    await expect(
+      page.getByRole('main').getByRole('heading', { level: 1, name: 'Product not found' }),
+    ).toBeVisible();
   });
 
-  test('shows an error, and no product, when the product source fails', async ({
+  test('shows an error under the heading "Product", and no product, when the product source fails', async ({
     page,
     productSource,
   }) => {
@@ -43,7 +48,8 @@ test.describe('Product detail', () => {
     await expect(page.getByRole('alert')).toHaveText(
       'Product could not be loaded. Please try again later.',
     );
-    await expect(page.getByRole('main').getByRole('heading')).toHaveCount(0);
+    await expect(page.getByRole('main').getByRole('heading')).toHaveText(['Product']);
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText('Product');
   });
 
   test('links back to the catalog', async ({ page }) => {
@@ -66,7 +72,9 @@ test.describe('Product detail', () => {
     await expect(lines).toHaveCount(1);
     await expect(lines).toContainText(mascara.title);
     await expect(lines).toContainText('$8.94');
-    await expect(lines.getByLabel('Quantity', { exact: true })).toHaveText('2');
+    await expect(lines.getByRole('status', { name: `Quantity of ${mascara.title}` })).toHaveText(
+      '2',
+    );
   });
 
   test('shows a loading indicator while the product is loading', async ({
@@ -83,26 +91,57 @@ test.describe('Product detail', () => {
     await expect(page.getByRole('heading', { name: mascara.title })).toBeVisible();
   });
 
-  test('confirms that the product was added to the Cart, with a "View cart" action', async ({
-    page,
-  }) => {
-    await page.goto('/catalog/1');
+  test.describe('add-to-cart confirmation', () => {
+    const inCart = (page: Page) => page.getByRole('main').getByRole('status');
 
-    await page.getByRole('button', { name: 'Add to cart' }).click();
+    test('states the quantity in the Cart with a "View cart" link, keeping focus on "Add to cart"', async ({
+      page,
+    }) => {
+      await page.goto('/catalog/1');
+      const addToCart = page.getByRole('button', { name: 'Add to cart' });
 
-    await expect(page.getByText('Added to cart')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'View cart' })).toBeVisible();
-  });
+      await addToCart.press('Enter');
 
-  test('opens the cart page from the confirmation\'s "View cart" action', async ({ page }) => {
-    await page.goto('/catalog/1');
-    await page.getByRole('button', { name: 'Add to cart' }).click();
+      await expect(inCart(page)).toContainText('Quantity in cart: 1');
+      await expect(inCart(page).getByRole('link', { name: 'View cart' })).toBeVisible();
+      await expect(addToCart).toBeFocused();
 
-    await page.getByRole('button', { name: 'View cart' }).click();
+      await addToCart.press('Enter');
+      await expect(inCart(page)).toContainText('Quantity in cart: 2');
+    });
 
-    await expect(page).toHaveURL('/cart');
-    await expect(
-      page.getByRole('main').getByRole('listitem').filter({ hasText: mascara.title }),
-    ).toBeVisible();
+    test('stays shown without the shopper acting', async ({ page }) => {
+      await page.clock.install();
+      await page.goto('/catalog/1');
+      await page.getByRole('button', { name: 'Add to cart' }).click();
+
+      await page.clock.fastForward(10_000);
+
+      await expect(inCart(page)).toContainText('Quantity in cart: 1');
+      await expect(inCart(page).getByRole('link', { name: 'View cart' })).toBeVisible();
+    });
+
+    test('states the quantity of a product already in the Cart', async ({ page }) => {
+      await page.goto('/');
+      await addToCart(page, mascara.title, 3);
+      await openCart(page);
+
+      await addToCart(page, mascara.title, 0);
+
+      await expect(inCart(page)).toContainText('Quantity in cart: 3');
+      await expect(inCart(page).getByRole('link', { name: 'View cart' })).toBeVisible();
+    });
+
+    test('opens the cart page from its "View cart" link', async ({ page }) => {
+      await page.goto('/catalog/1');
+      await page.getByRole('button', { name: 'Add to cart' }).click();
+
+      await inCart(page).getByRole('link', { name: 'View cart' }).click();
+
+      await expect(page).toHaveURL('/cart');
+      await expect(
+        page.getByRole('main').getByRole('listitem').filter({ hasText: mascara.title }),
+      ).toBeVisible();
+    });
   });
 });

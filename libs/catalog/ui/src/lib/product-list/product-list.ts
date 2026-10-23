@@ -1,3 +1,4 @@
+import { I18nPluralPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -12,6 +13,7 @@ import { ProductThumbnail } from '../product-thumbnail/product-thumbnail';
 @Component({
   selector: 'app-product-list',
   imports: [
+    I18nPluralPipe,
     RouterLink,
     MatButton,
     MatCard,
@@ -26,4 +28,7 @@ import { ProductThumbnail } from '../product-thumbnail/product-thumbnail';
 })
 export class ProductList {
   protected readonly store = inject(CatalogStore);
+
+  /** Keyed by the locale's plural categories; `#` is the number of matching products. */
+  protected readonly outcomeLabels = { one: '# product', other: '# products' };
 }

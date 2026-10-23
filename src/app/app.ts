@@ -1,5 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, computed, inject, linkedSignal } from '@angular/core';
+import {
+  afterRenderEffect,
+  Component,
+  computed,
+  type ElementRef,
+  inject,
+  linkedSignal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
@@ -47,4 +55,16 @@ export class App {
     source: () => ({ wide: this.wide(), navigation: this.router.lastSuccessfulNavigation() }),
     computation: ({ wide }) => wide,
   });
+
+  private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
+
+  constructor() {
+    // After an in-app navigation, start reading and tabbing from the new page's content.
+    afterRenderEffect({
+      write: () => {
+        const navigation = this.router.lastSuccessfulNavigation();
+        if (navigation?.previousNavigation) this.main().nativeElement.focus();
+      },
+    });
+  }
 }

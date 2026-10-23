@@ -1,4 +1,9 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
+
+/** A product's entry in the product list, found by its title. */
+export function productInList(page: Page, title: string): Locator {
+  return page.getByRole('main').getByRole('listitem').filter({ hasText: title });
+}
 
 /**
  * Adds a product from its product detail, `times` times, reaching it through the app's navigation:
@@ -6,12 +11,7 @@ import { expect, type Page } from '@playwright/test';
  */
 export async function addToCart(page: Page, title: string, times = 1): Promise<void> {
   await page.getByRole('navigation').getByRole('link', { name: 'Catalog', exact: true }).click();
-  await page
-    .getByRole('main')
-    .getByRole('listitem')
-    .filter({ hasText: title })
-    .getByRole('link')
-    .click();
+  await productInList(page, title).getByRole('link').click();
   const addToCart = page.getByRole('button', { name: 'Add to cart' });
   for (let i = 0; i < times; i++) await addToCart.click();
 }

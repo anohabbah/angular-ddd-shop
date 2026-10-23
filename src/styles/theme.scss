@@ -15,6 +15,12 @@ html {
       container-width: 16rem,
     )
   );
+  @include mat.strong-focus-indicators(
+    (
+      border-color: var(--mat-sys-primary),
+      border-width: 3px,
+    )
+  );
 }
 
 body {
@@ -23,6 +29,12 @@ body {
   background: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
+}
+
+// Plain links (product cards, Cart line titles); Material components draw their own indicator.
+a:not(.mat-mdc-button-base, .mat-mdc-list-item):focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 2px;
 }
 
 // Material hard-codes the drawer transition (400ms, standard curve) with no token.
@@ -46,4 +58,9 @@ body {
   .mat-drawer-content {
     transition: none;
   }
+}
+
+// Keeps focused elements clear of the sticky header when the browser scrolls them into view.
+.mat-drawer-content {
+  scroll-padding-top: calc(var(--mat-toolbar-standard-height, 64px) + 8px);
 }

@@ -5,13 +5,7 @@
   @for (row of rows(); track row.line.item.productId; let last = $last) {
   <li>
     <div class="flex flex-wrap items-center gap-4 py-3">
-      <img
-        [ngSrc]="row.line.item.thumbnail"
-        [alt]="row.line.item.title"
-        width="80"
-        height="80"
-        class="rounded-sm"
-      />
+      <img [ngSrc]="row.line.item.thumbnail" alt="" width="80" height="80" class="rounded-sm" />
       <div class="grid flex-1 gap-1">
         <a
           [routerLink]="['/catalog', row.line.item.productId]"
@@ -25,18 +19,23 @@
           mat-icon-button
           type="button"
           class="pressable"
-          aria-label="Decrease quantity"
+          [attr.aria-label]="'Decrease quantity of ' + row.line.item.title"
           [disabled]="row.line.quantity === 1"
           (click)="cart.decrease(row.line.item.productId)"
         >
           <mat-icon>remove</mat-icon>
         </button>
-        <span aria-label="Quantity" class="min-w-6 text-center">{{ row.line.quantity }}</span>
+        <span
+          role="status"
+          [attr.aria-label]="'Quantity of ' + row.line.item.title"
+          class="min-w-6 text-center"
+          >{{ row.line.quantity }}</span
+        >
         <button
           mat-icon-button
           type="button"
           class="pressable"
-          aria-label="Increase quantity"
+          [attr.aria-label]="'Increase quantity of ' + row.line.item.title"
           (click)="cart.increase(row.line.item.productId)"
         >
           <mat-icon>add</mat-icon>
@@ -47,8 +46,10 @@
         mat-icon-button
         type="button"
         class="pressable"
-        aria-label="Remove"
-        (click)="cart.remove(row.line.item.productId)"
+        #removeButton
+        [attr.aria-label]="'Remove ' + row.line.item.title"
+        [attr.data-product-id]="row.line.item.productId"
+        (click)="remove(row.line.item.productId)"
       >
         <mat-icon>delete</mat-icon>
       </button>
@@ -59,7 +60,7 @@
   </li>
   }
 </ul>
-<p class="text-right text-title-medium">Cart total: {{ total }}</p>
+<p role="status" class="text-right text-title-medium">Cart total: {{ total }}</p>
 } @else {
-<p>Your cart is empty</p>
+<p #empty tabindex="-1">Your cart is empty</p>
 }

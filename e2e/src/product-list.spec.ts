@@ -20,13 +20,13 @@ test.describe('Product list', () => {
 
     const discounted = product(page, mascara.title);
     await expect(discounted.getByRole('heading', { name: mascara.title })).toBeVisible();
-    await expect(discounted.getByRole('img', { name: mascara.title })).toBeVisible();
+    await expect(discounted.getByRole('presentation')).toBeVisible();
     await expect(discounted).toContainText('$8.94');
     await expect(discounted.getByRole('deletion')).toHaveText('$9.99');
 
     const full = product(page, eyeshadow.title);
     await expect(full.getByRole('heading', { name: eyeshadow.title })).toBeVisible();
-    await expect(full.getByRole('img', { name: eyeshadow.title })).toBeVisible();
+    await expect(full.getByRole('presentation')).toBeVisible();
     await expect(full).toContainText('$19.99');
     await expect(full.getByRole('deletion')).toHaveCount(0);
   });
@@ -69,7 +69,7 @@ test.describe('Product list', () => {
     await expect(product(page, mascara.title)).toBeVisible();
   });
 
-  test('shows a placeholder named after the product when its thumbnail fails to load or is missing', async ({
+  test('shows a placeholder when its thumbnail fails to load or is missing', async ({
     page,
     productSource,
   }) => {
@@ -80,9 +80,10 @@ test.describe('Product list', () => {
     await page.goto('/catalog');
 
     for (const title of [mascara.title, eyeshadow.title]) {
-      const thumbnail = product(page, title).getByRole('img', { name: title });
-      await expect(thumbnail).toBeVisible();
-      await expect(thumbnail).not.toHaveJSProperty('naturalWidth', 0);
+      // The placeholder is decorative, hidden from assistive technologies like the thumbnail.
+      const placeholder = product(page, title).getByRole('img', { includeHidden: true });
+      await expect(placeholder).toBeVisible();
+      await expect(placeholder).not.toHaveJSProperty('naturalWidth', 0);
     }
   });
 
@@ -95,5 +96,68 @@ test.describe('Product list', () => {
     productSource.release();
     await expect(page.getByRole('progressbar')).toHaveCount(0);
     await expect(product(page, mascara.title)).toBeVisible();
+  });
+
+  test('has the level-one heading "Catalog" while loading, once loaded and when the product source fails', async ({
+    page,
+    productSource,
+  }) => {
+    const heading = page.getByRole('main').getByRole('heading', { level: 1 });
+
+    productSource.hold();
+    await page.goto('/catalog');
+    await expect(page.getByRole('progressbar', { name: 'Loading products' })).toBeVisible();
+    await expect(heading).toHaveText('Catalog');
+
+    productSource.release();
+    await expect(product(page, mascara.title)).toBeVisible();
+    await expect(heading).toHaveText('Catalog');
+
+    productSource.fail();
+    await page.reload();
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(heading).toHaveText('Catalog');
+  });
+
+  test('says in text which price is the final price and which the list price', async ({ page }) => {
+    await page.goto('/catalog');
+
+    const discounted = product(page, mascara.title);
+    await expect(discounted).toContainText('Final price $8.94');
+    await expect(discounted).toContainText('List price $9.99');
+    await expect(discounted.getByRole('deletion')).toHaveText('$9.99');
+
+    const full = product(page, eyeshadow.title);
+    await expect(full).toContainText('Final price $19.99');
+    await expect(full).not.toContainText('List price');
+  });
+
+  test("names each product's link after its title once, followed by its prices, and gives thumbnails no text alternative", async ({
+    page,
+  }) => {
+    await page.goto('/catalog');
+
+    await expect(product(page, mascara.title).getByRole('link')).toHaveAccessibleName(
+      new RegExp(`^${mascara.title} Final price`),
+    );
+    await expect(product(page, eyeshadow.title).getByRole('presentation')).toBeVisible();
+    await expect(page.getByRole('main').getByRole('img')).toHaveCount(0);
+  });
+
+  test('states the outcome of each settled search term in a status message, keeping focus in the search field', async ({
+    page,
+  }) => {
+    await page.goto('/catalog');
+    const status = page.getByRole('main').getByRole('status');
+    const searchBox = page.getByRole('searchbox', { name: 'Search products' });
+
+    await expect(status).toHaveText('3 products');
+
+    await searchBox.fill('iphone');
+    await expect(status).toHaveText('1 product');
+
+    await searchBox.fill('zzzz');
+    await expect(status).toHaveText('No products match "zzzz"');
+    await expect(searchBox).toBeFocused();
   });
 });

@@ -1,4 +1,6 @@
 import { test as base, type Route } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 
 /** A product as dummyjson.com serves it: the external contract the app's adapter parses. */
 export type ProductDto = {
@@ -49,6 +51,12 @@ const image = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==',
   'base64',
 );
+
+// The icon font Google Fonts serves, from the material-symbols package. Its stylesheet's relative
+// font URL resolves against the Google Fonts origin, so both files are served from there.
+const iconFontDir = dirname(require.resolve('material-symbols/outlined.css'));
+const iconFontCss = readFileSync(join(iconFontDir, 'outlined.css'));
+const iconFont = readFileSync(join(iconFontDir, 'material-symbols-outlined.woff2'));
 
 export class ProductSource {
   /** What the product source serves, for the product list, the search and by id. */
@@ -104,8 +112,9 @@ function json(route: Route, body: unknown, status = 200): Promise<void> {
 }
 
 /**
- * Every test runs against a stubbed product source and image CDN.
- * Any other cross-origin request (Google Fonts included) is aborted, so tests never use the network.
+ * Every test runs against a stubbed product source, image CDN and icon font, so icons render as
+ * glyphs as they do in production. Any other cross-origin request is aborted, so tests never use
+ * the network.
  */
 export const test = base.extend<{ productSource: ProductSource }>({
   productSource: [
@@ -121,6 +130,11 @@ export const test = base.extend<{ productSource: ProductSource }>({
             return url.href === missingThumbnail
               ? route.fulfill({ status: 404 })
               : route.fulfill({ contentType: 'image/png', body: image });
+          }
+          if (url.origin === 'https://fonts.googleapis.com') {
+            return url.pathname === '/css2'
+              ? route.fulfill({ contentType: 'text/css', body: iconFontCss })
+              : route.fulfill({ contentType: 'font/woff2', headers: cors, body: iconFont });
           }
           return route.abort();
         },

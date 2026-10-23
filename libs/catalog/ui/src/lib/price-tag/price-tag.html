@@ -1,4 +1,5 @@
-<span class="final">{{ final() }}</span>
+<span class="final"><span class="sr-only">Final price </span>{{ final() }}</span>
 @if (list(); as list) {
+<span class="sr-only">List price </span>
 <s class="list" role="deletion">{{ list }}</s>
 }

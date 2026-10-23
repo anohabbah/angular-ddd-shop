@@ -1,0 +1,154 @@
+# WCAG 2.2 AA conformance statement
+
+## Claim
+
+| Component                | Value                                                                                                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Date                     | 2026-10-22                                                                                                                                                 |
+| Standard                 | Web Content Accessibility Guidelines (WCAG) 2.2, <https://www.w3.org/TR/WCAG22/>                                                                           |
+| Level                    | AA                                                                                                                                                         |
+| Status                   | Conforms. All 55 A and AA success criteria are supported or not applicable                                                                                 |
+| Pages                    | The product list (`/catalog`), the product detail (`/catalog/:productId`) and the cart page (`/cart`), with the app shell (toolbar and navigation) on each |
+| Technologies relied upon | HTML, CSS, JavaScript, WAI-ARIA                                                                                                                            |
+
+### States and conditions covered
+
+Each page is covered in every state of the conformance matrix, in light and dark color schemes, at 1280, 390 and 320 CSS px wide:
+
+- product list: loaded, loading, failed, no matches
+- product detail: loaded, loading, not found, failed
+- cart page: empty, with Cart lines
+- navigation open on a narrow viewport
+
+## How it was verified
+
+| Key | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A   | Automated gate, `pnpm nx e2e e2e` (Playwright, Chromium). `e2e/src/accessibility.spec.ts` runs axe-core with the `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` and `wcag22aa` tags over every cell of the matrix: no violations, no rule disabled or excluded. It also runs reflow (no sideways scrolling at 320 px), text-spacing (no clipped text) and target-size (≥ 24 × 24) probes. The behavior specs in `e2e/src` check titles, headings, landmarks, accessible names, status messages and focus placement by role, label and text |
+| V   | Manual VoiceOver + Safari pass, [voiceover-script.md](voiceover-script.md), 2026-10-22: all 31 steps pass. Step numbers are given as V1.1 and so on                                                                                                                                                                                                                                                                                                                                                                                    |
+| P   | Manual check by the maintainer, 2026-10-22: pointer cancellation (press, move off, release) and the loading bar under 2.2.2                                                                                                                                                                                                                                                                                                                                                                                                            |
+| M   | Manual contrast measurements (below), taken from computed colors in Chromium with the icon font loaded                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+
+## Assistive technology
+
+| Pair                                         | Status     |
+| -------------------------------------------- | ---------- |
+| VoiceOver with Safari 27.0.1 on macOS 27.0.1 | Tested     |
+| NVDA with Firefox or Chrome on Windows       | Not tested |
+| JAWS on Windows                              | Not tested |
+| VoiceOver on iOS, TalkBack on Android        | Not tested |
+
+## Success criteria
+
+Verdicts: Supports, Partially supports, Does not support, Not applicable (the pages have no content of that kind), and Not verified (no automated or manual evidence yet). Not verified is never counted as Supports.
+
+### Level A
+
+| Criterion                                     | Verdict        | Note                                                                                                                                                                                                                        |
+| --------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.1.1 Non-text Content                        | Supports       | Thumbnails are decorative (`alt=""`, placeholder `aria-hidden`) because the title is shown beside them. Icons are `aria-hidden` inside named controls. A; V2.2                                                              |
+| 1.2.1 Audio-only and Video-only (Prerecorded) | Not applicable | No audio or video                                                                                                                                                                                                           |
+| 1.2.2 Captions (Prerecorded)                  | Not applicable | No video                                                                                                                                                                                                                    |
+| 1.2.3 Audio Description or Media Alternative  | Not applicable | No video                                                                                                                                                                                                                    |
+| 1.3.1 Info and Relationships                  | Supports       | Headings, lists, landmarks, the search field's label, and the Price display ("Final price", "List price") are exposed in markup. A; V1.2, V2.1–2.3, V4.3                                                                    |
+| 1.3.2 Meaningful Sequence                     | Supports       | DOM order is the visual order on every page. V (reading and Tab order through each page)                                                                                                                                    |
+| 1.3.3 Sensory Characteristics                 | Not applicable | No instruction refers to shape, size, position or sound                                                                                                                                                                     |
+| 1.4.1 Use of Color                            | Supports       | The List price is struck through and labelled in text. The current page is marked with `aria-current` as well as the pill. The "View cart" link is underlined. A; V1.2, V2.2                                                |
+| 1.4.2 Audio Control                           | Not applicable | No audio                                                                                                                                                                                                                    |
+| 2.1.1 Keyboard                                | Supports       | Every control was reached and used with the keyboard alone. A (keyboard behavior specs); V1–V4                                                                                                                              |
+| 2.1.2 No Keyboard Trap                        | Supports       | Tab and Shift+Tab move through and out of every page, including the open narrow navigation. A; V1.3, V2.9                                                                                                                   |
+| 2.1.4 Character Key Shortcuts                 | Not applicable | No single-key shortcuts                                                                                                                                                                                                     |
+| 2.2.1 Timing Adjustable                       | Supports       | No time limits. The add-to-cart status no longer disappears on its own. A ("Message stays", 10 s); V3.5                                                                                                                     |
+| 2.2.2 Pause, Stop, Hide                       | Supports       | The only moving content is the indeterminate loading bar, shown while a product request is pending and removed when it settles: an essential preload indicator. Confirmed by the maintainer on 2026-10-22 (P)               |
+| 2.3.1 Three Flashes or Below Threshold        | Not applicable | Nothing flashes                                                                                                                                                                                                             |
+| 2.4.1 Bypass Blocks                           | Supports       | A "Main" navigation landmark and a main landmark, and focus moves to the main region after in-app navigation. A (`bypass`, landmark specs); V1.2, V1.4, V3.1                                                                |
+| 2.4.2 Page Titled                             | Supports       | "<page> \| ngsample" on every page and state. A (page-title spec); V1.1, V1.4, V3.2, V3.8, V3.9, V4.1                                                                                                                       |
+| 2.4.3 Focus Order                             | Supports       | Focus moves to the main region after navigating, and to the next, previous or empty-cart target after a removal. A; V3.1, V4.5–V4.7                                                                                         |
+| 2.4.4 Link Purpose (In Context)               | Supports       | Product links name their product once. Cart link "Cart, N items"; "View cart"; "Back to catalog". A (`link-name`); V1.5, V2.2, V3.6                                                                                         |
+| 2.5.1 Pointer Gestures                        | Not applicable | No multipoint or path-based gestures                                                                                                                                                                                        |
+| 2.5.2 Pointer Cancellation                    | Supports       | Controls are native buttons and links that activate on click, with no pointer-down, touch or key handlers. Pressing a control, moving off and releasing does not activate it. Confirmed by the maintainer on 2026-10-22 (P) |
+| 2.5.3 Label in Name                           | Supports       | Accessible names contain the visible labels. A (`label-content-name-mismatch` with the icon font loaded); V3.3, V4.2                                                                                                        |
+| 2.5.4 Motion Actuation                        | Not applicable | No motion-triggered functions                                                                                                                                                                                               |
+| 3.1.1 Language of Page                        | Supports       | `<html lang="en">`. A (`html-has-lang`, `html-lang-valid`)                                                                                                                                                                  |
+| 3.2.1 On Focus                                | Supports       | Focusing a control never changes the page. V (Tab through every page)                                                                                                                                                       |
+| 3.2.2 On Input                                | Supports       | Typing a Search term filters the list in place and announces the outcome. Focus stays in the field. A; V2.4–V2.6                                                                                                            |
+| 3.2.6 Consistent Help                         | Not applicable | No help mechanism                                                                                                                                                                                                           |
+| 3.3.1 Error Identification                    | Not applicable | No input is validated. Load failures are announced as alerts (V2.8, V3.10)                                                                                                                                                  |
+| 3.3.2 Labels or Instructions                  | Supports       | The search field has the label "Search products". A (`label`); V2.4                                                                                                                                                         |
+| 3.3.7 Redundant Entry                         | Not applicable | No multi-step process asks for information twice                                                                                                                                                                            |
+| 4.1.2 Name, Role, Value                       | Supports       | Named controls; `aria-expanded` on "Open navigation"; `aria-current` on the current navigation link. The snackbar, whose action was focusable inside `aria-hidden`, has been removed. A; V1.3, V4.2                         |
+
+### Level AA
+
+| Criterion                                       | Verdict        | Note                                                                                                                                                                        |
+| ----------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.2.4 Captions (Live)                           | Not applicable | No live media                                                                                                                                                               |
+| 1.2.5 Audio Description (Prerecorded)           | Not applicable | No video                                                                                                                                                                    |
+| 1.3.4 Orientation                               | Supports       | No orientation lock. The matrix covers portrait (390 × 844, 320 × 640) and landscape (1280 × 800) viewports. A                                                              |
+| 1.3.5 Identify Input Purpose                    | Not applicable | The only input is a Search term, not information about the Shopper                                                                                                          |
+| 1.4.3 Contrast (Minimum)                        | Supports       | A (`color-contrast`) in both schemes. M covers the cases axe could not decide                                                                                               |
+| 1.4.4 Resize Text                               | Supports       | Content reflows without loss at 320 CSS px, the width of 1280 px at 400% zoom. A                                                                                            |
+| 1.4.5 Images of Text                            | Not applicable | No images of text                                                                                                                                                           |
+| 1.4.10 Reflow                                   | Supports       | No sideways scrolling at 320 CSS px in any state. A (reflow probe)                                                                                                          |
+| 1.4.11 Non-text Contrast                        | Supports       | Focus indicators, icons, the search field outline and the cart badge are all ≥ 3:1 in both schemes. M                                                                       |
+| 1.4.12 Text Spacing                             | Supports       | No clipped text with WCAG text spacing at 320 px on the product list, product detail and cart. A (text-spacing probe)                                                       |
+| 1.4.13 Content on Hover or Focus                | Not applicable | No tooltips or other content shown on hover or focus                                                                                                                        |
+| 2.4.5 Multiple Ways                             | Supports       | Products are reached through the product list and the search. The pages are reached through the navigation. A; V1.4, V2.4, V3.1                                             |
+| 2.4.6 Headings and Labels                       | Supports       | One level-one heading per page that names it. Cart line controls name their product. A; V2.1, V3.2, V3.8–V3.10, V4.1, V4.2                                                  |
+| 2.4.7 Focus Visible                             | Supports       | Strong focus indicators (3 px, primary) on Material controls and plain links, distinct from the current-page pill. M; screenshots in both schemes (task 6.7)                |
+| 2.4.11 Focus Not Obscured (Minimum)             | Supports       | Scroll padding keeps focus below the sticky header. A (390 × 500 backwards-Tab spec); V2.9                                                                                  |
+| 2.5.7 Dragging Movements                        | Not applicable | No dragging                                                                                                                                                                 |
+| 2.5.8 Target Size (Minimum)                     | Supports       | A (`target-size`; Cart line controls probe ≥ 24 × 24)                                                                                                                       |
+| 3.1.2 Language of Parts                         | Not applicable | All content, product data included, is in English                                                                                                                           |
+| 3.2.3 Consistent Navigation                     | Supports       | The same toolbar and navigation, in the same order, on every page. A (app-shell spec); V1.2                                                                                 |
+| 3.2.4 Consistent Identification                 | Supports       | The same functions have the same names on every page ("Cart", "Add to cart", "Remove <title>"). A; V1.5, V3.3, V4.2                                                         |
+| 3.3.3 Error Suggestion                          | Not applicable | No input is validated                                                                                                                                                       |
+| 3.3.4 Error Prevention (Legal, Financial, Data) | Not applicable | No checkout, transaction or data submission                                                                                                                                 |
+| 3.3.8 Accessible Authentication (Minimum)       | Not applicable | No authentication                                                                                                                                                           |
+| 4.1.3 Status Messages                           | Supports       | The product list outcome, "Quantity in cart: N", each line's quantity and the Cart total are status regions, announced without moving focus. A; V2.4–V2.6, V3.3, V3.4, V4.4 |
+
+4.1.1 Parsing is obsolete in WCAG 2.2 and is not listed.
+
+## Manual measurements
+
+Measured on 2026-10-22 from computed colors in Chromium, at 1280 px, with the icon font loaded. The ratios are WCAG contrast ratios.
+
+### Focus indicators (1.4.11, 2.4.7)
+
+The indicator is a 3 px ring in `--mat-sys-primary`: light `rgb(0, 92, 187)`, dark `rgb(171, 199, 255)`.
+
+| Element                  | Adjacent color                          | Light  | Dark    |
+| ------------------------ | --------------------------------------- | ------ | ------- |
+| Toolbar cart link        | Toolbar (surface)                       | 6.17:1 | 10.92:1 |
+| Current Catalog nav link | Current-page pill (secondary container) | 5.00:1 | 5.49:1  |
+| Current Catalog nav link | Navigation background (surface)         | 6.17:1 | 10.92:1 |
+| Product card link        | Page (surface)                          | 6.17:1 | 10.92:1 |
+
+### Contrast cases axe marks incomplete (1.4.3)
+
+axe could not determine the background of the navigation link text, which other elements overlap, or check the empty search field. Measured by hand, with text typed into the field:
+
+| Text                    | Background            | Light   | Dark    |
+| ----------------------- | --------------------- | ------- | ------- |
+| Current navigation link | Current-page pill     | 13.30:1 | 7.24:1  |
+| Other navigation link   | Navigation background | 16.41:1 | 14.41:1 |
+| Search field text       | Field background      | 16.41:1 | 14.41:1 |
+
+All are 16 px regular text, so the requirement is 4.5:1.
+
+### Other user-interface components (1.4.11)
+
+| Component                                          | Adjacent color | Light  | Dark    |
+| -------------------------------------------------- | -------------- | ------ | ------- |
+| Toolbar cart icon; Cart line +, − and delete icons | Surface        | 8.88:1 | 14.38:1 |
+| "Back to catalog" icon                             | Surface        | 6.17:1 | 10.92:1 |
+| "Add to cart" icon                                 | Button fill    | 6.46:1 | 7.74:1  |
+| Search field outline                               | Surface        | 4.27:1 | 5.84:1  |
+| Cart badge                                         | Toolbar        | 6.16:1 | 10.94:1 |
+| Cart badge number                                  | Badge          | 6.46:1 | 7.72:1  |
+
+The decrease button is disabled at quantity 1, and disabled controls are exempt.
+
+## Keeping this statement current
+
+Any change to a `ui` lib or the app shell re-runs the automated gate. If it changes what a screen reader announces, repeat the affected steps of the VoiceOver script, then update this statement's date and the affected verdicts (see the Testing section of `CLAUDE.md`).

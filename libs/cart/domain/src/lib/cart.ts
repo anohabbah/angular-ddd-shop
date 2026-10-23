@@ -72,3 +72,23 @@ export function cartTotal(lines: readonly CartLine[]): Money | undefined {
 export function itemCount(lines: readonly CartLine[]): number {
   return lines.reduce((count, line) => count + line.quantity, 0);
 }
+
+/** `undefined` when the product has no Cart line. */
+export function lineQuantity(
+  lines: readonly CartLine[],
+  productId: ProductId,
+): Quantity | undefined {
+  return lines.find((line) => line.item.productId === productId)?.quantity;
+}
+
+/**
+ * The product whose Cart line receives focus once `productId`'s line is removed:
+ * the next line, else the previous one, else `undefined` for a Cart left empty.
+ */
+export function focusAfterRemoval(
+  lines: readonly CartLine[],
+  productId: ProductId,
+): ProductId | undefined {
+  const index = lines.findIndex((line) => line.item.productId === productId);
+  return (lines[index + 1] ?? lines[index - 1])?.item.productId;
+}
