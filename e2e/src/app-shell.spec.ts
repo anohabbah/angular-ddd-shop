@@ -34,6 +34,31 @@ test.describe('App shell', () => {
       await expect(navigation.getByRole('link', { name: 'Catalog', exact: true })).toBeVisible();
       await expect(navigation.getByRole('link', { name: 'Cart', exact: true })).toBeVisible();
     });
+
+    test('marks the Cart navigation link as the current page on the cart page', async ({
+      page,
+    }) => {
+      await page.goto('/cart');
+
+      const navigation = page.getByRole('navigation');
+      await expect(navigation.getByRole('link', { name: 'Cart', exact: true })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+      await expect(
+        navigation.getByRole('link', { name: 'Catalog', exact: true }),
+      ).not.toHaveAttribute('aria-current');
+    });
+
+    test('marks the Catalog navigation link as the current page on a product detail', async ({
+      page,
+    }) => {
+      await page.goto('/catalog/1');
+
+      await expect(
+        page.getByRole('navigation').getByRole('link', { name: 'Catalog', exact: true }),
+      ).toHaveAttribute('aria-current', 'page');
+    });
   });
 
   for (const colorScheme of ['light', 'dark'] as const) {
