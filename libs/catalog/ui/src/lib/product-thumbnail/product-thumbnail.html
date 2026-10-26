@@ -1,7 +1,7 @@
 @if (showImage()) {
-<img [ngSrc]="product().thumbnail" alt="" fill [priority]="priority()" (error)="onLoadError()" />
+  <img [ngSrc]="product().thumbnail" alt="" fill [priority]="priority()" (error)="onLoadError()" />
 } @else {
-<svg aria-hidden="true">
-  <rect width="100%" height="100%" />
-</svg>
+  <svg aria-hidden="true">
+    <rect width="100%" height="100%" />
+  </svg>
 }

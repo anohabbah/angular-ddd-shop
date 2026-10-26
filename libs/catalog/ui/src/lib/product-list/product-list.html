@@ -12,38 +12,42 @@
 </mat-form-field>
 
 <output class="block text-on-surface-variant">
-  @if (!store.products.isLoading()) { @if (store.hasNoMatches()) {
-  <span>No products match "{{ store.settledSearchTerm() }}"</span>
-  } @else if (store.products.hasValue()) {
-  <span>{{ store.products.value().length | i18nPlural: outcomeLabels }}</span>
-  } }
+  @if (!store.products.isLoading()) {
+    @if (store.hasNoMatches()) {
+      <span>No products match "{{ store.settledSearchTerm() }}"</span>
+    } @else if (store.products.hasValue()) {
+      <span>{{ store.products.value().length | i18nPlural: outcomeLabels }}</span>
+    }
+  }
 </output>
 
 @if (store.products.isLoading()) {
-<mat-progress-bar mode="indeterminate" aria-label="Loading products" />
+  <mat-progress-bar mode="indeterminate" aria-label="Loading products" />
 } @else if (store.products.error()) {
-<p role="alert">Products could not be loaded.</p>
-<button mat-stroked-button type="button" class="pressable" (click)="store.reload()">
-  Try again
-</button>
+  <p role="alert">Products could not be loaded.</p>
+  <button mat-stroked-button type="button" class="pressable" (click)="store.reload()">
+    Try again
+  </button>
 } @else if (store.products.hasValue() && !store.hasNoMatches()) {
-<ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
-  @for (product of store.products.value(); track product.id; let index = $index) {
-  <li>
-    <a
-      [routerLink]="[product.id]"
-      class="block h-full pressable rounded-md text-inherit no-underline"
-    >
-      <mat-card appearance="outlined" class="h-full">
-        <!-- The main column (max-w-5xl in src/app/app.html) fits at most four entries in a row, so the first row is among them. -->
-        <app-product-thumbnail mat-card-image [product]="product" [priority]="index < 4" />
-        <mat-card-header><h2 mat-card-title>{{ product.title }}</h2></mat-card-header>
-        <mat-card-content class="mt-auto pt-2">
-          <app-price-tag [product]="product" />
-        </mat-card-content>
-      </mat-card>
-    </a>
-  </li>
-  }
-</ul>
+  <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
+    @for (product of store.products.value(); track product.id; let index = $index) {
+      <li>
+        <a
+          [routerLink]="[product.id]"
+          class="block h-full pressable rounded-md text-inherit no-underline"
+        >
+          <mat-card appearance="outlined" class="h-full">
+            <!-- The main column (max-w-5xl in src/app/app.html) fits at most four entries in a row, so the first row is among them. -->
+            <app-product-thumbnail mat-card-image [product]="product" [priority]="index < 4" />
+            <mat-card-header
+              ><h2 mat-card-title>{{ product.title }}</h2></mat-card-header
+            >
+            <mat-card-content class="mt-auto pt-2">
+              <app-price-tag [product]="product" />
+            </mat-card-content>
+          </mat-card>
+        </a>
+      </li>
+    }
+  </ul>
 }

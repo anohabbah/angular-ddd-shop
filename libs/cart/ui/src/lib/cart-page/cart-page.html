@@ -1,63 +1,65 @@
 <h1 class="text-title-large">Cart</h1>
 
 @if (total(); as total) {
-<ul class="m-0 list-none p-0">
-  @for (row of rows(); track row.line.item.productId; let last = $last) {
-  <li>
-    <div class="flex flex-wrap items-center gap-4 py-3">
-      <img [ngSrc]="row.line.item.thumbnail" alt="" width="80" height="80" class="rounded-sm" />
-      <div class="grid flex-1 gap-1">
-        <a
-          [routerLink]="['/catalog', row.line.item.productId]"
-          class="text-inherit text-title-medium"
-          >{{ row.line.item.title }}</a
-        >
-        <span class="text-on-surface-variant text-body-medium">{{ row.unitPrice }}</span>
-      </div>
-      <div class="flex items-center">
-        <button
-          mat-icon-button
-          type="button"
-          class="pressable"
-          [attr.aria-label]="'Decrease quantity of ' + row.line.item.title"
-          [disabled]="row.line.quantity === 1"
-          (click)="cart.decrease(row.line.item.productId)"
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <output [attr.aria-label]="'Quantity of ' + row.line.item.title" class="min-w-6 text-center"
-          >{{ row.line.quantity }}</output
-        >
-        <button
-          mat-icon-button
-          type="button"
-          class="pressable"
-          [attr.aria-label]="'Increase quantity of ' + row.line.item.title"
-          (click)="cart.increase(row.line.item.productId)"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <span class="min-w-20 text-right text-label-large">{{ row.lineTotal }}</span>
-      <button
-        mat-icon-button
-        type="button"
-        class="pressable"
-        #removeButton
-        [attr.aria-label]="'Remove ' + row.line.item.title"
-        [attr.data-product-id]="row.line.item.productId"
-        (click)="remove(row.line.item.productId)"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-    @if (!last) {
-    <mat-divider />
+  <ul class="m-0 list-none p-0">
+    @for (row of rows(); track row.line.item.productId; let last = $last) {
+      <li>
+        <div class="flex flex-wrap items-center gap-4 py-3">
+          <img [ngSrc]="row.line.item.thumbnail" alt="" width="80" height="80" class="rounded-sm" />
+          <div class="grid flex-1 gap-1">
+            <a
+              [routerLink]="['/catalog', row.line.item.productId]"
+              class="text-inherit text-title-medium"
+              >{{ row.line.item.title }}</a
+            >
+            <span class="text-on-surface-variant text-body-medium">{{ row.unitPrice }}</span>
+          </div>
+          <div class="flex items-center">
+            <button
+              mat-icon-button
+              type="button"
+              class="pressable"
+              [attr.aria-label]="'Decrease quantity of ' + row.line.item.title"
+              [disabled]="row.line.quantity === 1"
+              (click)="cart.decrease(row.line.item.productId)"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
+            <output
+              [attr.aria-label]="'Quantity of ' + row.line.item.title"
+              class="min-w-6 text-center"
+              >{{ row.line.quantity }}</output
+            >
+            <button
+              mat-icon-button
+              type="button"
+              class="pressable"
+              [attr.aria-label]="'Increase quantity of ' + row.line.item.title"
+              (click)="cart.increase(row.line.item.productId)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <span class="min-w-20 text-right text-label-large">{{ row.lineTotal }}</span>
+          <button
+            mat-icon-button
+            type="button"
+            class="pressable"
+            #removeButton
+            [attr.aria-label]="'Remove ' + row.line.item.title"
+            [attr.data-product-id]="row.line.item.productId"
+            (click)="remove(row.line.item.productId)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        @if (!last) {
+          <mat-divider />
+        }
+      </li>
     }
-  </li>
-  }
-</ul>
-<output class="block text-right text-title-medium">Cart total: {{ total }}</output>
+  </ul>
+  <output class="block text-right text-title-medium">Cart total: {{ total }}</output>
 } @else {
-<p #empty tabindex="-1">Your cart is empty</p>
+  <p #empty tabindex="-1">Your cart is empty</p>
 }

@@ -7,16 +7,16 @@
   >
     <mat-nav-list aria-label="Main">
       @for (item of navItems; track item.path) {
-      <a
-        mat-list-item
-        class="pressable"
-        [routerLink]="item.path"
-        routerLinkActive
-        #link="routerLinkActive"
-        [activated]="link.isActive"
-        ariaCurrentWhenActive="page"
-        >{{ item.label }}</a
-      >
+        <a
+          mat-list-item
+          class="pressable"
+          [routerLink]="item.path"
+          routerLinkActive
+          #link="routerLinkActive"
+          [activated]="link.isActive"
+          ariaCurrentWhenActive="page"
+          >{{ item.label }}</a
+        >
       }
     </mat-nav-list>
   </mat-sidenav>
@@ -25,17 +25,17 @@
       <mat-toolbar>
         <div class="mx-auto flex w-full max-w-5xl items-center gap-2">
           @if (!wide()) {
-          <button
-            mat-icon-button
-            class="pressable"
-            aria-label="Open navigation"
-            [attr.aria-expanded]="opened()"
-            (click)="opened.set(true)"
-          >
-            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" />
-            </svg>
-          </button>
+            <button
+              mat-icon-button
+              class="pressable"
+              aria-label="Open navigation"
+              [attr.aria-expanded]="opened()"
+              (click)="opened.set(true)"
+            >
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </button>
           }
           <span class="flex-1">ngsample</span>
           <app-cart-link />
