@@ -4,17 +4,26 @@ import { MatIcon } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
+import { TranslocoDirective, translateSignal } from '@jsverse/transloco';
 import { CartStore } from '@ngsample/cart/application';
 import { lineQuantity } from '@ngsample/cart/domain';
 import { productDetail } from '@ngsample/catalog/application';
-import { parseProductId, type Product, toCartItem } from '@ngsample/catalog/domain';
+import { parseProductId, toCartItem, type Product } from '@ngsample/catalog/domain';
 import { pageTitle, type ProductId } from '@ngsample/shared/domain';
 import { PriceTag } from '../price-tag/price-tag';
 import { ProductThumbnail } from '../product-thumbnail/product-thumbnail';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [RouterLink, MatButton, MatIcon, MatProgressBar, PriceTag, ProductThumbnail],
+  imports: [
+    RouterLink,
+    MatButton,
+    MatIcon,
+    MatProgressBar,
+    PriceTag,
+    ProductThumbnail,
+    TranslocoDirective,
+  ],
   templateUrl: './product-detail.html',
 })
 export class ProductDetail {
@@ -33,9 +42,12 @@ export class ProductDetail {
       : undefined,
   );
 
+  readonly #notFound = translateSignal('notFound');
+  readonly #product = translateSignal('product');
+
   readonly #pageName = computed(() => {
-    if (this.detail.notFound()) return 'Product not found';
-    return this.detail.product.hasValue() ? this.detail.product.value().title : 'Product';
+    if (this.detail.notFound()) return this.#notFound();
+    return this.detail.product.hasValue() ? this.detail.product.value().title : this.#product();
   });
 
   constructor() {

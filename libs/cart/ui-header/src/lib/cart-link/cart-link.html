@@ -1,10 +1,11 @@
 <a
+  *transloco="let t; prefix: 'cartHeader'"
   mat-icon-button
   routerLink="/cart"
   class="pressable"
   [matBadge]="cart.itemCount()"
   [matBadgeHidden]="cart.itemCount() === 0"
-  [attr.aria-label]="cart.itemCount() | i18nPlural: labels"
+  [attr.aria-label]="t('link', { count: cart.itemCount() })"
 >
   <mat-icon>shopping_cart</mat-icon>
 </a>

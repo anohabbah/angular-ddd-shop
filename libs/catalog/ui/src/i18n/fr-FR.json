@@ -1,0 +1,19 @@
+{
+  "title": "Catalogue",
+  "search": "Rechercher des produits",
+  "loading": "Chargement des produits",
+  "outcome": "{count, plural, one {# produit} other {# produits}}",
+  "finalPrice": "Prix final",
+  "listPrice": "Prix initial",
+  "noMatches": "Aucun produit ne correspond à « {term} »",
+  "loadFailed": "Les produits n'ont pas pu être chargés.",
+  "retry": "Réessayer",
+  "back": "Retour au catalogue",
+  "addToCart": "Ajouter au panier",
+  "quantityInCart": "Quantité dans le panier : {quantity}",
+  "viewCart": "Voir le panier",
+  "product": "Produit",
+  "notFound": "Produit introuvable",
+  "loadingProduct": "Chargement du produit",
+  "productLoadFailed": "Le produit n'a pas pu être chargé. Veuillez réessayer plus tard."
+}

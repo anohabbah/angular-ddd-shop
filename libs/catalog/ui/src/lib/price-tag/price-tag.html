@@ -1,5 +1,9 @@
-<span class="final"><span class="sr-only">Final price </span>{{ final() }}</span>
-@if (list(); as list) {
-  <span class="sr-only">List price </span>
-  <del class="list">{{ list }}</del>
-}
+<ng-container *transloco="let t; prefix: 'catalog'">
+  <span class="final"
+    ><span class="sr-only">{{ t('finalPrice') }} </span>{{ final() }}</span
+  >
+  @if (list(); as list) {
+    <span class="sr-only">{{ t('listPrice') }} </span>
+    <del class="list">{{ list }}</del>
+  }
+</ng-container>

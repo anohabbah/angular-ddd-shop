@@ -1,15 +1,22 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { TestKey } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component } from '@angular/core';
+import { ApplicationInitStatus, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS } from '@angular/material/core';
 import { MatNavListHarness } from '@angular/material/list/testing';
 import { MatSidenavHarness } from '@angular/material/sidenav/testing';
 import { provideRouter, Router } from '@angular/router';
+import { provideLocalization } from '@ngsample/shared/infrastructure';
 import { App, WIDE_VIEWPORT_QUERY } from './app';
 
 type Listener = (e: { matches: boolean }) => void;
+
+/** The shell's translations; jsdom's Preferred languages resolve to en-US. */
+const localization = provideLocalization({
+  'fr-FR': () => import('./i18n/fr-FR.json'),
+  'en-US': () => import('./i18n/en-US.json'),
+});
 
 /** Viewport whose width the test controls; jsdom has no matchMedia. */
 class FakeMediaMatcher {
@@ -52,8 +59,10 @@ async function setupShell({ wide = false } = {}) {
       ]),
       { provide: MediaMatcher, useValue: viewport },
       { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
+      localization,
     ],
   });
+  await TestBed.inject(ApplicationInitStatus).donePromise;
   const fixture = TestBed.createComponent(App);
   const router = TestBed.inject(Router);
   await router.navigateByUrl('/catalog');
@@ -224,6 +233,8 @@ describe('App shell', () => {
 
   it('shows a toolbar in the header with the shop name and the cart link', async () => {
     const { fixture } = await setupShell();
+    // The cart link renders once its translations have loaded.
+    await settle(fixture);
 
     const toolbar = (fixture.nativeElement as HTMLElement).querySelector('header mat-toolbar');
     expect(toolbar?.textContent).toContain('ngsample');
@@ -238,8 +249,9 @@ describe('App', () => {
   it('should create', async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), localization],
     }).compileComponents();
+    await TestBed.inject(ApplicationInitStatus).donePromise;
     expect(TestBed.createComponent(App).componentInstance).toBeTruthy();
   });
 });

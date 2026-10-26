@@ -33,6 +33,31 @@ test.describe('Cart link', () => {
     await expect(cartLink.getByText('0', { exact: true })).toBeHidden();
   });
 
+  test('is in the toolbar as soon as the navigation is, however late its texts load', async ({
+    page,
+  }) => {
+    // Delay the script carrying the Cart link's texts.
+    await page.route('**/*.js', async (route) => {
+      const response = await route.fetch();
+      if ((await response.text()).includes('Cart, {count, plural')) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      await route.fulfill({ response });
+    });
+
+    // Wide enough for the navigation to show without opening it.
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'Catalog' })).toBeVisible();
+    const cartLinkShown = await page
+      .getByRole('banner')
+      .getByRole('link', { name: 'Cart, 0 items' })
+      .isVisible();
+    await page.unrouteAll({ behavior: 'wait' });
+
+    expect(cartLinkShown).toBe(true);
+  });
+
   test('opens the cart page from a product detail', async ({ page }) => {
     await page.goto('/catalog/1');
 

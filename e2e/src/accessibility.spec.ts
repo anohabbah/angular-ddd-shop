@@ -50,7 +50,9 @@ const states: State[] = [
     reach: async (page, productSource) => {
       productSource.hold();
       await page.goto('/catalog');
-      await expect(page.getByRole('progressbar', { name: 'Loading products' })).toBeVisible();
+      await expect(
+        page.getByRole('progressbar', { name: 'Chargement des produits' }),
+      ).toBeVisible();
     },
   },
   {
@@ -65,9 +67,9 @@ const states: State[] = [
     name: 'product list, no matches',
     reach: async (page) => {
       await page.goto('/catalog');
-      await page.getByRole('searchbox', { name: 'Search products' }).fill('zzzz');
+      await page.getByRole('searchbox', { name: 'Rechercher des produits' }).fill('zzzz');
       await expect(page.getByRole('main').getByRole('status')).toHaveText(
-        'No products match "zzzz"',
+        'Aucun produit ne correspond à « zzzz »',
       );
     },
   },
@@ -83,14 +85,14 @@ const states: State[] = [
     reach: async (page, productSource) => {
       productSource.hold();
       await page.goto('/catalog/1');
-      await expect(page.getByRole('progressbar', { name: 'Loading product' })).toBeVisible();
+      await expect(page.getByRole('progressbar', { name: 'Chargement du produit' })).toBeVisible();
     },
   },
   {
     name: 'product detail, not found',
     reach: async (page) => {
       await page.goto('/catalog/abc');
-      await expect(page.getByRole('heading', { name: 'Product not found' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Produit introuvable' })).toBeVisible();
     },
   },
   {
@@ -105,7 +107,7 @@ const states: State[] = [
     name: 'cart page, empty',
     reach: async (page) => {
       await page.goto('/cart');
-      await expect(page.getByText('Your cart is empty')).toBeVisible();
+      await expect(page.getByText('Votre panier est vide')).toBeVisible();
     },
   },
   {
@@ -118,9 +120,9 @@ const states: State[] = [
     reach: async (page) => {
       await page.goto('/catalog');
       await expect(productInList(page, mascara.title)).toBeVisible();
-      await page.getByRole('button', { name: 'Open navigation' }).click();
+      await page.getByRole('button', { name: 'Ouvrir la navigation' }).click();
       await expect(
-        page.getByRole('navigation').getByRole('link', { name: 'Cart', exact: true }),
+        page.getByRole('navigation').getByRole('link', { name: 'Panier', exact: true }),
       ).toBeVisible();
     },
   },
@@ -133,11 +135,11 @@ const states: State[] = [
 async function reachCartWithLines(page: Page): Promise<void> {
   await page.goto('/catalog');
   await productInList(page, mascara.title).getByRole('link').click();
-  await page.getByRole('button', { name: 'Add to cart' }).click();
-  await page.getByRole('link', { name: 'Back to catalog' }).click();
+  await page.getByRole('button', { name: 'Ajouter au panier' }).click();
+  await page.getByRole('link', { name: 'Retour au catalogue' }).click();
   await productInList(page, eyeshadow.title).getByRole('link').click();
-  await page.getByRole('button', { name: 'Add to cart' }).click();
-  await page.getByRole('link', { name: 'View cart' }).click();
+  await page.getByRole('button', { name: 'Ajouter au panier' }).click();
+  await page.getByRole('link', { name: 'Voir le panier' }).click();
   await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(2);
 }
 
@@ -185,6 +187,9 @@ function clippedText(page: Page) {
 }
 
 test.describe('Accessibility', () => {
+  /* The conformance matrix is checked in the default Locale. */
+  test.use({ locale: 'fr-FR' });
+
   for (const setup of setups) {
     test.describe(setup.name, () => {
       test.use({ viewport: setup.viewport, colorScheme: setup.colorScheme });
@@ -196,6 +201,7 @@ test.describe('Accessibility', () => {
         }) => {
           await state.reach(page, productSource);
 
+          await expect(page.locator('html')).toHaveAttribute('lang', 'fr-FR');
           expect(await wcagViolations(page)).toEqual([]);
           if (!state.narrowOnly) {
             await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);

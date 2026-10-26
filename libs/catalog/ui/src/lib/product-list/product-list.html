@@ -1,53 +1,55 @@
-<h1 class="text-title-large">Catalog</h1>
+<ng-container *transloco="let t; prefix: 'catalog'">
+  <h1 class="text-title-large">{{ t('title') }}</h1>
 
-<mat-form-field appearance="outline" class="w-full">
-  <mat-label>Search products</mat-label>
-  <input
-    #search
-    matInput
-    type="search"
-    [value]="store.searchTerm()"
-    (input)="store.setSearchTerm(search.value)"
-  />
-</mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>{{ t('search') }}</mat-label>
+    <input
+      #search
+      matInput
+      type="search"
+      [value]="store.searchTerm()"
+      (input)="store.setSearchTerm(search.value)"
+    />
+  </mat-form-field>
 
-<output class="block text-on-surface-variant">
-  @if (!store.products.isLoading()) {
-    @if (store.hasNoMatches()) {
-      <span>No products match "{{ store.settledSearchTerm() }}"</span>
-    } @else if (store.products.hasValue()) {
-      <span>{{ store.products.value().length | i18nPlural: outcomeLabels }}</span>
+  <output class="block text-on-surface-variant">
+    @if (!store.products.isLoading()) {
+      @if (store.hasNoMatches()) {
+        <span>{{ t('noMatches', { term: store.settledSearchTerm() }) }}</span>
+      } @else if (store.products.hasValue()) {
+        <span>{{ t('outcome', { count: store.products.value().length }) }}</span>
+      }
     }
+  </output>
+
+  @if (store.products.isLoading()) {
+    <mat-progress-bar mode="indeterminate" [attr.aria-label]="t('loading')" />
+  } @else if (store.products.error()) {
+    <p role="alert">{{ t('loadFailed') }}</p>
+    <button mat-stroked-button type="button" class="pressable" (click)="store.reload()">
+      {{ t('retry') }}
+    </button>
+  } @else if (store.products.hasValue() && !store.hasNoMatches()) {
+    <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
+      @for (product of store.products.value(); track product.id; let index = $index) {
+        <li>
+          <a
+            [routerLink]="[product.id]"
+            class="block h-full pressable rounded-md text-inherit no-underline"
+          >
+            <mat-card appearance="outlined" class="h-full">
+              <!-- The main column (max-w-5xl in src/app/app.html) fits at most four entries in a row, so the first row is among them. -->
+              <app-product-thumbnail mat-card-image [product]="product" [priority]="index < 4" />
+              <mat-card-header
+                ><h2 mat-card-title lang="en">{{ product.title }}</h2></mat-card-header
+              >
+              <mat-card-content class="mt-auto pt-2">
+                <app-price-tag [product]="product" />
+              </mat-card-content>
+            </mat-card>
+          </a>
+        </li>
+      }
+    </ul>
   }
-</output>
-
-@if (store.products.isLoading()) {
-  <mat-progress-bar mode="indeterminate" aria-label="Loading products" />
-} @else if (store.products.error()) {
-  <p role="alert">Products could not be loaded.</p>
-  <button mat-stroked-button type="button" class="pressable" (click)="store.reload()">
-    Try again
-  </button>
-} @else if (store.products.hasValue() && !store.hasNoMatches()) {
-  <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4 p-0">
-    @for (product of store.products.value(); track product.id; let index = $index) {
-      <li>
-        <a
-          [routerLink]="[product.id]"
-          class="block h-full pressable rounded-md text-inherit no-underline"
-        >
-          <mat-card appearance="outlined" class="h-full">
-            <!-- The main column (max-w-5xl in src/app/app.html) fits at most four entries in a row, so the first row is among them. -->
-            <app-product-thumbnail mat-card-image [product]="product" [priority]="index < 4" />
-            <mat-card-header
-              ><h2 mat-card-title>{{ product.title }}</h2></mat-card-header
-            >
-            <mat-card-content class="mt-auto pt-2">
-              <app-price-tag [product]="product" />
-            </mat-card-content>
-          </mat-card>
-        </a>
-      </li>
-    }
-  </ul>
-}
+</ng-container>

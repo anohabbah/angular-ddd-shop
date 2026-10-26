@@ -15,11 +15,20 @@ into() { osascript -e 'tell application "VoiceOver" to tell vo cursor to move in
 out() { osascript -e 'tell application "VoiceOver" to tell vo cursor to move out of item' 2>&1; sleep 0.6; }
 act() { osascript -e 'tell application "VoiceOver" to tell vo cursor to perform action' 2>&1; }
 
+# Keystrokes go to the frontmost app, so bring Safari forward first, and send nothing if another
+# app (the terminal) still has focus.
+safari_front() {
+  osascript -e 'tell application "Safari" to activate'; sleep 0.3
+  local front
+  front=$(osascript -e 'tell application "System Events" to get name of first process whose frontmost is true')
+  [ "$front" = "Safari" ] || { echo "not sent: $front is frontmost, not Safari"; return 1; }
+}
+
 # Keyboard, through System Events: key codes 48 Tab, 124 Right
-key() { local m=""; [ -n "$2" ] && m=" using {$2}"; osascript -e "tell application \"System Events\" to key code $1$m" 2>&1; }
+key() { safari_front || return 1; local m=""; [ -n "$2" ] && m=" using {$2}"; osascript -e "tell application \"System Events\" to key code $1$m" 2>&1; }
 tab() { key 48; }
 stab() { key 48 "shift down"; }
-typ() { osascript -e "tell application \"System Events\" to keystroke \"$1\"" 2>&1; }
+typ() { safari_front || return 1; osascript -e "tell application \"System Events\" to keystroke \"$1\"" 2>&1; }
 
 # VO+Right until the spoken phrase contains $1 (at most $2 moves)
 to() {

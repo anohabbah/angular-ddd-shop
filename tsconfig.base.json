@@ -10,6 +10,7 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "preserve",
+    "resolveJsonModule": true,
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
@@ -24,7 +25,8 @@
       "@ngsample/cart/domain": ["./libs/cart/domain/src/index.ts"],
       "@ngsample/cart/application": ["./libs/cart/application/src/index.ts"],
       "@ngsample/cart/ui": ["./libs/cart/ui/src/index.ts"],
-      "@ngsample/cart/ui/header": ["./libs/cart/ui-header/src/index.ts"]
+      "@ngsample/cart/ui/header": ["./libs/cart/ui-header/src/index.ts"],
+      "@ngsample/shared/infrastructure": ["./libs/shared/infrastructure/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

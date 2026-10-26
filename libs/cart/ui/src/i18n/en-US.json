@@ -1,0 +1,9 @@
+{
+  "title": "Cart",
+  "empty": "Your cart is empty",
+  "decrease": "Decrease quantity of {title}",
+  "quantity": "Quantity of {title}",
+  "increase": "Increase quantity of {title}",
+  "remove": "Remove {title}",
+  "total": "Cart total: {total}"
+}

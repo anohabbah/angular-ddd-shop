@@ -16,6 +16,14 @@ _Avoid_: User, customer, visitor
 The positive whole number that identifies a Product.
 _Avoid_: SKU, product code
 
+**Locale**:
+The language and regional conventions the shop is shown in for a Shopper's visit: French (France), the default, or US English. Chosen once from the Shopper's Preferred languages.
+_Avoid_: Language, lang, culture
+
+**Preferred languages**:
+The Shopper's languages, in order of preference, as their browser reports them.
+_Avoid_: Browser language, accept-language
+
 ## Catalog
 
 The products offered for sale, and how shoppers find and view them.

@@ -73,3 +73,66 @@ When every step has a result, note the date, macOS, Safari and VoiceOver version
 - Date: 2026-10-22, all steps Pass
 - macOS / Safari: macOS 27.0.1, Safari 27.0.1, VoiceOver (built in)
 - Tester: Abbah A (maintainer)
+
+## French pass (`fr-FR`)
+
+The steps whose announcements are translated, run with macOS and Safari in French (Preferred languages `["fr-FR"]`), so the shop shows the `fr-FR` Locale. Product titles stay in English. Driven with `tools/voiceover.sh`, which reads VoiceOver's last spoken phrase, so a short phrase replaced quickly by another can be missed.
+
+| #   | Expected in `fr-FR`                                                                                                | Heard                                                                                          | Result |
+| --- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | ------ |
+| 1.5 | "Panier, 0 article, lien" with an empty Cart, "Panier, 2 articles, lien" after adding two items                    | "lien Panier, 0 article bannière", then "lien Panier, 2 articles bannière"                     | Pass   |
+| 2.4 | "1 produit", focus stays in "Rechercher des produits"                                                              | "1 produit" for `kiwi` (the live source has 8 results for `iphone`: "8 produits"). Focus stays | Pass   |
+| 2.5 | "<count> produits"                                                                                                 | "30 produits" for `a`                                                                          | Pass   |
+| 2.6 | "Aucun produit ne correspond à « zzzz »", focus stays in the field                                                 | "Aucun produit ne correspond à « zzzz »". Focus stays                                          | Pass   |
+| 3.3 | "Quantité dans le panier : 1", focus stays on "Ajouter au panier", a "Voir le panier" link follows                 | "Quantité dans le panier : 1", focus stays; VO+Right: "Voir le panier" link                    | Pass   |
+| 3.4 | "Quantité dans le panier : 2", focus stays on "Ajouter au panier"                                                  | "Quantité dans le panier : 2"                                                                  | Pass   |
+| 4.3 | "Quantité de Essence Mascara Lash Princess", then its value                                                        | "Quantité de Essence Mascara Lash Princess sortie"                                             | Pass   |
+| 4.4 | The new quantity "2" and "Total du panier : <amount>", focus stays on "Augmenter la quantité de Essence Mascara …" | "Total du panier : 17,88 $US" only, twice (quantities 2 and 3). Focus stays                    | Fail   |
+
+4.4 fails the same way with the markup from before localization (`git show HEAD:libs/cart/ui/src/lib/cart-page/cart-page.html`, restored afterwards): only "Cart total: <amount>" is heard. It is a pre-existing failure, not a regression of the French texts. Confirm by ear before fixing it, since the driver may miss the quantity.
+
+#### 4.4: diagnosis, deferred (2026-10-25)
+
+Throwaway markup variants of the cart page's quantity `<output>`, run through steps 4.4 with one Cart line (increase 1 → 2 → 3), each restored afterwards:
+
+| Variant                                                                                 | Quantity announced           | Cart total announced |
+| --------------------------------------------------------------------------------------- | ---------------------------- | -------------------- |
+| Current: `[attr.aria-label]="Quantité de <title>"`                                      | No                           | Yes                  |
+| Plus `role="status"`, or plus `aria-live="polite" aria-atomic="true"`                   | No                           | Yes                  |
+| `aria-labelledby` to a visually hidden span instead of `aria-label`                     | No                           | Yes                  |
+| No name at all (Cart total removed)                                                     | Yes: "2", "3"                | —                    |
+| Label as visually hidden text inside the `<output>` (`<span class="sr-only">`), no name | Yes: "Quantité de <title> 2" | No                   |
+| Same, with `role="status" aria-live="polite"` on both outputs                           | Yes                          | No                   |
+
+Findings: VoiceOver with Safari 27 does not announce content changes in a live region that has an author name (`aria-label` or `aria-labelledby`). When two live regions change in one update, only one is announced. So two separate regions cannot announce both the quantity and the Cart total, as the shopping-cart requirement "Quantity and Cart total announced" asks.
+
+Options, to decide before the fix (its own slice, and a spec change either way):
+
+- **One combined message**: one visually hidden status region says "Quantité de <title> : 2. Total du panier : <amount>"; the visible quantity and total stop being live (`aria-live="off"`), and the quantity keeps its name. Needs the last changed Cart line as source state, set by the increase and decrease commands. What it says on removal is still to be designed.
+- **Quantity only**: the label moves into the quantity's text, visually hidden. The changed line is named in its announcement; the Cart total is not announced on a quantity change. The requirement is relaxed to match.
+
+Not yet tested with more than one Cart line. Only the changed line's region changes, so the same one-of-two limit applies. Whichever option is chosen, add a scenario and a VoiceOver step with two lines: increasing the second line announces that line's title and quantity, and the right total.
+
+- Date: 2026-10-25. 7 steps Pass, 4.4 Fail (pre-existing)
+- macOS / Safari: macOS 27.0.1, Safari 27.0.1, VoiceOver (built in), system language French
+- Tester: Claude Code, driving VoiceOver with `tools/voiceover.sh`
+
+### Product content in English (`lang="en"`)
+
+Product titles, categories and descriptions are marked `lang="en"` inside the French page. Rerun of the steps whose elements changed, 2026-10-25, same versions and driver. The driver reads the spoken text, not the voice, so whether VoiceOver switches to an English voice for those parts is Not verified until checked by ear.
+
+| #   | Heard                                                                                                                                             | Result       |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| 2.2 | "lien niveau d'en-tête 2 Essence Mascara Lash Princess Prix final 8,94 $US Prix initial …": the title once, then the prices                       | Pass         |
+| 3.2 | Title "Essence Mascara Lash Princess \| ngsample"; "niveau d'en-tête 1 Essence Mascara Lash Princess", then "Beauty" and the description          | Pass         |
+| 4.2 | One line: "lien Essence Mascara Lash Princess", "Augmenter la quantité de Essence Mascara Lash Princess", "Retirer Essence Mascara Lash Princess" | Pass         |
+| —   | English voice for the `lang="en"` parts                                                                                                           | Not verified |
+
+### Cart line names without an article
+
+The French Cart line names no longer use "de" before the title, which needed elision for some titles ("d'Essence"): they read "Diminuer la quantité – <title>", "Augmenter la quantité – <title>" and "Quantité – <title>". Rerun of the steps whose names changed, 2026-10-25, same versions and driver, with lines for product 1 (quantity 2) and product 2 (quantity 1). 4.4 is left to the by-ear check above.
+
+| #   | Heard                                                                                                                                                                                                                                                                                                                                                           | Result |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 4.2 | VO+Cmd+H: "niveau d'en-tête 1 Panier", then "Dernier en-tête". Tab: "lien Essence Mascara Lash Princess", "Diminuer la quantité – Essence Mascara Lash Princess bouton", "Augmenter la quantité – Essence Mascara Lash Princess bouton", "Retirer Essence Mascara Lash Princess bouton", then "Retirer Eyeshadow Palette with Mirror bouton" on the second line | Pass   |
+| 4.3 | "Quantité – Essence Mascara Lash Princess sortie", then "2"                                                                                                                                                                                                                                                                                                     | Pass   |

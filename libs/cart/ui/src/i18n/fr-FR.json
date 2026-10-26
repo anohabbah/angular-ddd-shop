@@ -1,0 +1,9 @@
+{
+  "title": "Panier",
+  "empty": "Votre panier est vide",
+  "decrease": "Diminuer la quantité – {title}",
+  "quantity": "Quantité – {title}",
+  "increase": "Augmenter la quantité – {title}",
+  "remove": "Retirer {title}",
+  "total": "Total du panier : {total}"
+}

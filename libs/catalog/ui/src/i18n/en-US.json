@@ -1,0 +1,19 @@
+{
+  "title": "Catalog",
+  "search": "Search products",
+  "loading": "Loading products",
+  "outcome": "{count, plural, one {# product} other {# products}}",
+  "finalPrice": "Final price",
+  "listPrice": "List price",
+  "noMatches": "No products match \"{term}\"",
+  "loadFailed": "Products could not be loaded.",
+  "retry": "Try again",
+  "back": "Back to catalog",
+  "addToCart": "Add to cart",
+  "quantityInCart": "Quantity in cart: {quantity}",
+  "viewCart": "View cart",
+  "product": "Product",
+  "notFound": "Product not found",
+  "loadingProduct": "Loading product",
+  "productLoadFailed": "Product could not be loaded. Please try again later."
+}

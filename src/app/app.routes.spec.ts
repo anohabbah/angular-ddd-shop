@@ -1,10 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ApplicationRef } from '@angular/core';
+import { ApplicationInitStatus, ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideCatalogInfrastructure } from '@ngsample/catalog/infrastructure';
+import { provideLocalization } from '@ngsample/shared/infrastructure';
 import { appRoutes } from './app.routes';
 
 describe('appRoutes', () => {
@@ -15,8 +16,13 @@ describe('appRoutes', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideCatalogInfrastructure(),
+        provideLocalization({
+          'fr-FR': () => import('./i18n/fr-FR.json'),
+          'en-US': () => import('./i18n/en-US.json'),
+        }),
       ],
     });
+    await TestBed.inject(ApplicationInitStatus).donePromise;
 
     const harness = await RouterTestingHarness.create('/');
     TestBed.inject(HttpTestingController)

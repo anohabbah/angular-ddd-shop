@@ -1,38 +1,40 @@
-<a mat-button routerLink=".." class="pressable">
-  <mat-icon>arrow_back</mat-icon>
-  Back to catalog
-</a>
+<ng-container *transloco="let t; prefix: 'catalog'">
+  <a mat-button routerLink=".." class="pressable">
+    <mat-icon>arrow_back</mat-icon>
+    {{ t('back') }}
+  </a>
 
-@if (detail.notFound()) {
-  <h1 class="text-title-large">Product not found</h1>
-} @else if (detail.product.isLoading()) {
-  <h1 class="text-title-large">Product</h1>
-  <mat-progress-bar mode="indeterminate" aria-label="Loading product" />
-} @else if (detail.product.error()) {
-  <h1 class="text-title-large">Product</h1>
-  <p role="alert">Product could not be loaded. Please try again later.</p>
-} @else if (detail.product.hasValue()) {
-  @let product = detail.product.value();
-  <article class="grid max-w-160 grid-cols-1 gap-2">
-    <app-product-thumbnail class="w-75 max-w-full" [product]="product" priority />
-    <h1 class="m-0 text-title-large">{{ product.title }}</h1>
-    <p class="m-0 text-on-surface-variant capitalize">{{ product.category }}</p>
-    <app-price-tag [product]="product" />
-    <button
-      mat-flat-button
-      type="button"
-      class="pressable justify-self-start"
-      (click)="addToCart(product)"
-    >
-      <mat-icon>add_shopping_cart</mat-icon>
-      Add to cart
-    </button>
-    <output role="status" class="block">
-      @if (quantityInCart(); as quantity) {
-        Quantity in cart: {{ quantity }}
-        <a routerLink="/cart">View cart</a>
-      }
-    </output>
-    <p>{{ product.description }}</p>
-  </article>
-}
+  @if (detail.notFound()) {
+    <h1 class="text-title-large">{{ t('notFound') }}</h1>
+  } @else if (detail.product.isLoading()) {
+    <h1 class="text-title-large">{{ t('product') }}</h1>
+    <mat-progress-bar mode="indeterminate" [attr.aria-label]="t('loadingProduct')" />
+  } @else if (detail.product.error()) {
+    <h1 class="text-title-large">{{ t('product') }}</h1>
+    <p role="alert">{{ t('productLoadFailed') }}</p>
+  } @else if (detail.product.hasValue()) {
+    @let product = detail.product.value();
+    <article class="grid max-w-160 grid-cols-1 gap-2">
+      <app-product-thumbnail class="w-75 max-w-full" [product]="product" priority />
+      <h1 class="m-0 text-title-large" lang="en">{{ product.title }}</h1>
+      <p class="m-0 text-on-surface-variant capitalize" lang="en">{{ product.category }}</p>
+      <app-price-tag [product]="product" />
+      <button
+        mat-flat-button
+        type="button"
+        class="pressable justify-self-start"
+        (click)="addToCart(product)"
+      >
+        <mat-icon>add_shopping_cart</mat-icon>
+        {{ t('addToCart') }}
+      </button>
+      <output role="status" class="block">
+        @if (quantityInCart(); as quantity) {
+          {{ t('quantityInCart', { quantity }) }}
+          <a routerLink="/cart">{{ t('viewCart') }}</a>
+        }
+      </output>
+      <p lang="en">{{ product.description }}</p>
+    </article>
+  }
+</ng-container>

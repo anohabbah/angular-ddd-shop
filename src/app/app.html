@@ -1,11 +1,11 @@
-<mat-sidenav-container class="h-full">
+<mat-sidenav-container class="h-full" *transloco="let t">
   <mat-sidenav
     [mode]="mode()"
     [disableClose]="wide()"
     [opened]="opened()"
     (closedStart)="opened.set(false)"
   >
-    <mat-nav-list aria-label="Main">
+    <mat-nav-list [attr.aria-label]="t('nav.label')">
       @for (item of navItems; track item.path) {
         <a
           mat-list-item
@@ -15,7 +15,7 @@
           #link="routerLinkActive"
           [activated]="link.isActive"
           ariaCurrentWhenActive="page"
-          >{{ item.label }}</a
+          >{{ t(item.label) }}</a
         >
       }
     </mat-nav-list>
@@ -28,7 +28,7 @@
             <button
               mat-icon-button
               class="pressable"
-              aria-label="Open navigation"
+              [attr.aria-label]="t('nav.open')"
               [attr.aria-expanded]="opened()"
               (click)="opened.set(true)"
             >

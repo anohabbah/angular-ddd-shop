@@ -14,6 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { CartLink } from '@ngsample/cart/ui/header';
 import { map } from 'rxjs';
 
@@ -29,6 +30,7 @@ export const WIDE_VIEWPORT_QUERY = '(min-width: 960px)';
     MatButtonModule,
     MatToolbarModule,
     CartLink,
+    TranslocoDirective,
   ],
   selector: 'app-root',
   templateUrl: './app.html',
@@ -39,8 +41,8 @@ export class App {
   private readonly router = inject(Router);
 
   protected readonly navItems = [
-    { path: '/catalog', label: 'Catalog' },
-    { path: '/cart', label: 'Cart' },
+    { path: '/catalog', label: 'nav.catalog' },
+    { path: '/cart', label: 'nav.cart' },
   ];
 
   protected readonly wide = toSignal(
