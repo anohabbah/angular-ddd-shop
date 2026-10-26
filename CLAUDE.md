@@ -69,7 +69,16 @@ TDD per the `tdd` skill: agree on seams before the first test, then one red → 
 - UI behavior is tested end-to-end with Playwright in `e2e/`, against the product source stubbed in `e2e/src/support/fixtures.ts`. Locate elements by role, label or text only; no CSS selectors or test ids.
 - No component specs. Run `pnpm nx e2e e2e` with `pnpm nx build` and `pnpm nx test`.
 - Accessibility (WCAG 2.2 AA): `e2e/src/accessibility.spec.ts` runs axe over the conformance matrix (every page and state × light/dark × 1280/390/320 px). Never disable or exclude a rule to make it pass.
-- A change touching a `ui` lib or the app shell re-runs that gate. If it changes what a screen reader announces, repeat the affected steps of `docs/accessibility/voiceover-script.md` and update the date and affected verdicts in `docs/accessibility/conformance.md`.
+- A change touching a `ui` lib or the app shell re-runs that gate. If it changes what a screen reader announces, run the VoiceOver check below.
+
+### VoiceOver check
+
+Playwright reads roles from its own accessibility tree, not from what VoiceOver says. A change it passes can still go silent in Safari: `<output>` without an explicit `role="status"` doesn't announce content inserted into it. So markup or role changes need this manual pass.
+
+1. Pick the steps of `docs/accessibility/voiceover-script.md` whose elements the change touches.
+2. Drive VoiceOver with `tools/voiceover.sh`: `pnpm nx serve`, then `source tools/voiceover.sh; vo_start`, `go <url>`, `into`, `to "<text>"`, `act`, and `poll` to catch announcements. It needs "Allow VoiceOver to be controlled with AppleScript" (VoiceOver Utility), Automation access for the terminal to VoiceOver, and Accessibility access for Tab and typing (`tab`, `typ`). If a permission is missing, ask the user. Never skip the step.
+3. When a step fails, rerun it against the previous markup (`git show <base>:<file>`, restored afterwards) to tell a regression from a pre-existing failure. A regression is red: fix it as its own slice and rerun the step until it is green.
+4. Record each step's result, plus the date and versions, in the script, and update the date and affected verdicts in `docs/accessibility/conformance.md`. A step not run stays Not verified there. `vo_stop` and stop the dev server when done.
 
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->

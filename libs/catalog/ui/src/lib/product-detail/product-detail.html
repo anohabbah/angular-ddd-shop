@@ -26,7 +26,7 @@
     <mat-icon>add_shopping_cart</mat-icon>
     Add to cart
   </button>
-  <output class="block">
+  <output role="status" class="block">
     @if (quantityInCart(); as quantity) { Quantity in cart: {{ quantity }}
     <a routerLink="/cart">View cart</a>
     }
