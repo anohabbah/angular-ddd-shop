@@ -1,0 +1,7 @@
+{
+  "project": {
+    "projectKey": "ngsample",
+    "path": ".",
+    "serverUrl": "http://host.docker.internal:9001"
+  }
+}

@@ -26,11 +26,11 @@
     <mat-icon>add_shopping_cart</mat-icon>
     Add to cart
   </button>
-  <p role="status" class="m-0">
+  <output class="block">
     @if (quantityInCart(); as quantity) { Quantity in cart: {{ quantity }}
     <a routerLink="/cart">View cart</a>
     }
-  </p>
+  </output>
   <p>{{ product.description }}</p>
 </article>
 }

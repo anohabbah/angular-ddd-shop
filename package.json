@@ -7,7 +7,9 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "coverage": "nx run-many -t test --coverage && COVERAGE=1 nx e2e e2e",
+    "sonar": "sonar-scanner-npm"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec nano-staged"
@@ -49,6 +51,7 @@
     "@oxc-project/runtime": "^0.115.0",
     "@playwright/test": "^1.37.0",
     "@schematics/angular": "~22.2.0",
+    "@sonar/scan": "^5.0.2",
     "@swc/helpers": "~0.5.18",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.0.0",
@@ -60,6 +63,7 @@
     "globals": "^17.13.0",
     "jsdom": "^27.1.0",
     "material-symbols": "^0.48.1",
+    "monocart-coverage-reports": "^3.0.0",
     "nano-staged": "^1.0.2",
     "nx": "24.0.0",
     "postcss": "^8.5.31",

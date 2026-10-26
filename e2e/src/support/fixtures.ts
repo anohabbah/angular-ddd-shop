@@ -1,6 +1,7 @@
 import { test as base, type Route } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { collectCoverage, coverageReport } from './coverage';
 
 /** A product as dummyjson.com serves it: the external contract the app's adapter parses. */
 export type ProductDto = {
@@ -114,9 +115,9 @@ function json(route: Route, body: unknown, status = 200): Promise<void> {
 /**
  * Every test runs against a stubbed product source, image CDN and icon font, so icons render as
  * glyphs as they do in production. Any other cross-origin request is aborted, so tests never use
- * the network.
+ * the network. With `COVERAGE=1`, every test also records the app code it ran.
  */
-export const test = base.extend<{ productSource: ProductSource }>({
+export const test = base.extend<{ productSource: ProductSource; coverage: void }>({
   productSource: [
     async ({ page, baseURL }, use) => {
       const source = new ProductSource();
@@ -140,6 +141,15 @@ export const test = base.extend<{ productSource: ProductSource }>({
         },
       );
       await use(source);
+    },
+    { auto: true },
+  ],
+  coverage: [
+    async ({ page }, use) => {
+      if (!collectCoverage) return use();
+      await page.coverage.startJSCoverage({ resetOnNavigation: false });
+      await use();
+      await coverageReport().add(await page.coverage.stopJSCoverage());
     },
     { auto: true },
   ],

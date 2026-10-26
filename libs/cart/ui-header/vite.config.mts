@@ -25,6 +25,7 @@ export default defineConfig(() => ({
     coverage: {
       reportsDirectory: '../../../coverage/libs/cart/ui-header',
       provider: 'v8' as const,
+      reporter: ['text', ['lcov', { projectRoot: `${import.meta.dirname}/../../..` }]],
     },
   },
 }));

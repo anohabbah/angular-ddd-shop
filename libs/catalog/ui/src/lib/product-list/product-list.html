@@ -11,13 +11,13 @@
   />
 </mat-form-field>
 
-<p role="status" class="text-on-surface-variant">
+<output class="block text-on-surface-variant">
   @if (!store.products.isLoading()) { @if (store.hasNoMatches()) {
   <span>No products match "{{ store.settledSearchTerm() }}"</span>
   } @else if (store.products.hasValue()) {
   <span>{{ store.products.value().length | i18nPlural: outcomeLabels }}</span>
   } }
-</p>
+</output>
 
 @if (store.products.isLoading()) {
 <mat-progress-bar mode="indeterminate" aria-label="Loading products" />

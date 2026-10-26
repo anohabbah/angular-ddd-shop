@@ -1,8 +1,10 @@
-import { defineConfig, devices } from '@playwright/test';
-import { nxE2EPreset } from '@nx/playwright/preset';
 import { workspaceRoot } from '@nx/devkit';
+import { nxE2EPreset } from '@nx/playwright/preset';
+import { defineConfig, devices } from '@playwright/test';
 
 const isCI = !!process.env['CI'];
+// Coverage maps back to TypeScript through source maps, which only the dev server serves.
+const coverage = !!process.env['COVERAGE'];
 // For CI, you may want to set BASE_URL to the deployed application.
 const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
 
@@ -24,6 +26,10 @@ const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
  */
 export default defineConfig({
   ...nxE2EPreset(import.meta.dirname, { testDir: './src' }),
+  ...(coverage && {
+    globalSetup: './src/support/coverage-setup.ts',
+    globalTeardown: './src/support/coverage-teardown.ts',
+  }),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
@@ -31,7 +37,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: isCI ? 'npx nx run ngsample:serve-static' : 'npx nx run ngsample:serve',
+    command: isCI && !coverage ? 'npx nx run ngsample:serve-static' : 'npx nx run ngsample:serve',
     url: 'http://localhost:4200',
     reuseExistingServer: true,
     cwd: workspaceRoot,

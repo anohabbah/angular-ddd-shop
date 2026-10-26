@@ -25,11 +25,8 @@
         >
           <mat-icon>remove</mat-icon>
         </button>
-        <span
-          role="status"
-          [attr.aria-label]="'Quantity of ' + row.line.item.title"
-          class="min-w-6 text-center"
-          >{{ row.line.quantity }}</span
+        <output [attr.aria-label]="'Quantity of ' + row.line.item.title" class="min-w-6 text-center"
+          >{{ row.line.quantity }}</output
         >
         <button
           mat-icon-button
@@ -60,7 +57,7 @@
   </li>
   }
 </ul>
-<p role="status" class="text-right text-title-medium">Cart total: {{ total }}</p>
+<output class="block text-right text-title-medium">Cart total: {{ total }}</output>
 } @else {
 <p #empty tabindex="-1">Your cart is empty</p>
 }
