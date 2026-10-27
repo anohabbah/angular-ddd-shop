@@ -73,7 +73,7 @@ Alternatives considered:
 ## Risks / Trade-offs
 
 - **[The focus indicator may not show on a disabled-interactive button]** → Material's `.mat-mdc-button-disabled-interactive` keeps pointer events but the project's 3 px focus ring is applied by its own styles; the VoiceOver and screenshot step checks the ring is visible on the dimmed Decrease button in both color schemes. If it is not, the cart page styles extend the focus-visible rule to that class as its own slice.
-- **[A click on the dimmed Decrease still dispatches a store command]** → The domain clamp makes it a no-op on every derived value; the "Activating the disabled decrease action" scenario and the existing "cannot decrease it below 1" test cover it.
+- **[A click on the dimmed Decrease still dispatches a store command]** → The domain clamp makes it a no-op on every derived value; the "Activating the disabled decrease action" scenario covers it, tested by "leaves the Cart unchanged when the disabled Decrease control is activated" in `e2e/src/cart-page.spec.ts` (the existing "cannot decrease it below 1" test only checks the disabled state).
 - **[The drawer now starts closing before a navigation to another page completes]** → Same end state as today, a few milliseconds earlier; the existing "closes the navigation once a link in it is followed" test and the "keeps the navigation open when opened while the shop is still starting" test (which does not select a link) stay as they are.
 - **[axe or VoiceOver changes]** → Both edits touch a `ui` lib or the shell, so the full accessibility gate re-runs; the Decrease change adds a VoiceOver step and updates the conformance statement's date and the 2.4.3 and 4.1.2 notes.
 

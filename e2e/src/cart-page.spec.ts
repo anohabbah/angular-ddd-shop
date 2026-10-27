@@ -132,6 +132,28 @@ test.describe('Cart page', () => {
     await expect(decrease).toBeFocused();
   });
 
+  test('leaves the Cart unchanged when the disabled Decrease control is activated', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await addToCart(page, mascara.title);
+    await openCart(page);
+    const main = page.getByRole('main');
+    const decrease = main.getByRole('button', { name: `Decrease quantity of ${mascara.title}` });
+
+    await decrease.press('Enter');
+    await decrease.press('Space');
+
+    await expect(cartLines(page)).toHaveCount(1);
+    await expect(main.getByRole('status', { name: `Quantity of ${mascara.title}` })).toHaveText(
+      '1',
+    );
+    await expect(main.getByRole('status').filter({ hasText: 'Cart total' })).toHaveText(
+      'Cart total: $8.94',
+    );
+    await expect(decrease).toBeFocused();
+  });
+
   test.describe('focus after removing a Cart line', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/');
