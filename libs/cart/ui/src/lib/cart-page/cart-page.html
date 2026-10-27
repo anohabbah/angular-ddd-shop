@@ -29,6 +29,7 @@
                 class="pressable"
                 [attr.aria-label]="t('decrease', { title: row.line.item.title })"
                 [disabled]="row.line.quantity === 1"
+                disabledInteractive
                 (click)="cart.decrease(row.line.item.productId)"
               >
                 <mat-icon>remove</mat-icon>

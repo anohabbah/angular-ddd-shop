@@ -114,6 +114,24 @@ test.describe('Cart page', () => {
     await expect(increase).toBeFocused();
   });
 
+  test('keeps focus on the Decrease control when the quantity it decreased reaches 1', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await addToCart(page, mascara.title, 2);
+    await openCart(page);
+    const main = page.getByRole('main');
+    const decrease = main.getByRole('button', { name: `Decrease quantity of ${mascara.title}` });
+
+    await decrease.press('Enter');
+
+    await expect(main.getByRole('status', { name: `Quantity of ${mascara.title}` })).toHaveText(
+      '1',
+    );
+    await expect(decrease).toBeDisabled();
+    await expect(decrease).toBeFocused();
+  });
+
   test.describe('focus after removing a Cart line', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/');
