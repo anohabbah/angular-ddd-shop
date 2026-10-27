@@ -134,6 +134,22 @@ test.describe('App shell', () => {
       await expect(toggle).toHaveAttribute('aria-expanded', 'false');
       await expect(navigation).toBeHidden();
     });
+
+    test('closes the navigation once the link for the page already shown is selected', async ({
+      page,
+    }) => {
+      await page.goto('/catalog');
+      await expect(page.getByRole('heading', { name: 'Catalog', level: 1 })).toBeVisible();
+      const navigation = page.getByRole('navigation', { name: 'Main' });
+      const toggle = page.getByRole('button', { name: 'Open navigation' });
+      await toggle.click();
+
+      await navigation.getByRole('link', { name: 'Catalog', exact: true }).click();
+
+      await expect(page).toHaveURL('/catalog');
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(navigation).toBeHidden();
+    });
   });
 
   for (const { width, height, narrow } of [

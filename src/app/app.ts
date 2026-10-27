@@ -65,6 +65,11 @@ export class App {
 
   private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
 
+  /** Selecting a navigation link closes the drawer, even the link for the page already shown. */
+  protected closeNavigation(): void {
+    if (!this.wide()) this.opened.set(false);
+  }
+
   constructor() {
     // After an in-app navigation, start reading and tabbing from the new page's content.
     afterRenderEffect({

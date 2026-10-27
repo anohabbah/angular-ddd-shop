@@ -15,6 +15,7 @@
           #link="routerLinkActive"
           [activated]="link.isActive"
           ariaCurrentWhenActive="page"
+          (click)="closeNavigation()"
           >{{ t(item.label) }}</a
         >
       }
